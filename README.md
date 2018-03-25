@@ -1,5 +1,6 @@
 # Taskie Server
 [![Build Status](https://travis-ci.org/taskie-ch/taskie-backend.svg?branch=master)](https://travis-ci.org/taskie-ch/taskie-backend)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a646471fb0b74ccb81608fc15261424c)](https://www.codacy.com/app/tommyknows/taskie-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=taskie-ch/taskie-backend&amp;utm_campaign=Badge_Grade)
 
 How to start the Taskie Server application
 ---

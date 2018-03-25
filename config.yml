@@ -2,6 +2,8 @@ logging:
   level: INFO
   loggers:
     com.taskie: DEBUG
+http:
+    adminPort: 8081
 
 template: Hello, %s!
 defaultName: Stranger

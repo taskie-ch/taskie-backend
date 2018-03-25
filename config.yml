@@ -3,8 +3,8 @@ logging:
   loggers:
     com.taskie: DEBUG
 server:
-  http:
-    adminPort: 8081
-
+  adminConnectors:
+  - type: http
+    port: 9001
 template: Hello, %s!
 defaultName: Stranger

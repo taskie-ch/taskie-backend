@@ -1,4 +1,5 @@
 # Taskie Server
+[![Build Status](https://travis-ci.org/taskie-ch/taskie-backend.svg?branch=master)](https://travis-ci.org/taskie-ch/taskie-backend)
 
 How to start the Taskie Server application
 ---

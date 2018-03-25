@@ -2,7 +2,8 @@ logging:
   level: INFO
   loggers:
     com.taskie: DEBUG
-http:
+server:
+  http:
     adminPort: 8081
 
 template: Hello, %s!

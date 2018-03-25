@@ -1,0 +1,7 @@
+logging:
+  level: INFO
+  loggers:
+    com.taskie: DEBUG
+
+template: Hello, %s!
+defaultName: Stranger

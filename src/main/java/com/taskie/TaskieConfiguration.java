@@ -2,6 +2,7 @@ package com.taskie;
 
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class TaskieConfiguration extends Configuration {
@@ -11,6 +12,9 @@ public class TaskieConfiguration extends Configuration {
 
     @NotEmpty
     private String defaultName = "Stranger";
+
+    @JsonProperty("swagger")
+    public SwaggerBundleConfiguration swaggerBundleConfiguration;
 
     @JsonProperty
     public String getTemplate() {

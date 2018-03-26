@@ -7,6 +7,8 @@ import com.taskie.resources.TaskResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
 public class TaskieApplication extends Application<TaskieConfiguration> {
 
@@ -21,7 +23,12 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<TaskieConfiguration> bootstrap) {
-        // TODO: application initialization
+        bootstrap.addBundle(new SwaggerBundle<TaskieConfiguration>() {
+            @Override
+            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(final TaskieConfiguration configuration) {
+                return configuration.swaggerBundleConfiguration;
+            }
+        });
     }
 
     @Override

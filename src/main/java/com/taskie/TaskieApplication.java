@@ -1,7 +1,9 @@
 package com.taskie;
 
+import com.taskie.db.TaskDao;
 import com.taskie.health.TemplateHealthCheck;
 import com.taskie.resources.HelloWorldResource;
+import com.taskie.resources.TaskResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -37,6 +39,7 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         environment.healthChecks().register("template", healthCheck);
 
         environment.jersey().register(resource);
+        environment.jersey().register(new TaskResource(new TaskDao()));
     }
 
 }

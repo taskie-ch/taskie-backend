@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.Optional;
 
+@Api(value = "hello-world")
 @Path("/hello-world")
 @Api(value = "hello-world")
 @Produces(MediaType.APPLICATION_JSON)

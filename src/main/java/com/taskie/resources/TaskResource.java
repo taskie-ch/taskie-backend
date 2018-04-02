@@ -7,10 +7,7 @@ import io.dropwizard.jersey.params.LongParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 
@@ -30,7 +27,15 @@ public class TaskResource {
     @Path("/{taskId}")
     @ApiOperation(value = "Get tasks by id")
     public Task getTask(@PathParam("taskId") LongParam id) {
-        return taskDao.findById(id);
+        return taskDao.findById(id.get());
+    }
+
+    @POST
+    @Timed
+    @Path("/{taskId}/complete")
+    @ApiOperation(value = "Completes a task by id")
+    public Task completeTask(@PathParam("taskId") LongParam id) {
+        return taskDao.complete(id.get());
     }
 
     @GET

@@ -1,20 +1,27 @@
 package com.taskie.db;
 
+import com.taskie.api.TaskService;
+import com.taskie.core.Rotation;
 import com.taskie.core.Task;
-import io.dropwizard.jersey.params.LongParam;
+import com.taskie.core.User;
+import org.joda.time.DateTime;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TaskDao {
+public class TaskDao implements TaskService {
 
     private static final Map<Long, Task> TASKS = new HashMap<>();
 
     static {
-        TASKS.put(1L, new Task("test1"));
-        TASKS.put(2L, new Task("test2"));
-        TASKS.put(3L, new Task("test3"));
+
+        Rotation rota = Rotation.newBuilder()
+                .addRotation(DateTime.now().minusDays(1), new User("Simon"))
+                .build();
+        TASKS.put(1L, Task.create(1L, "test1", rota));
+        TASKS.put(2L, Task.create(2L, "test2", rota));
+        TASKS.put(3L, Task.create(3L, "test3", rota));
     }
 
 
@@ -22,7 +29,14 @@ public class TaskDao {
         return TASKS.values();
     }
 
-    public Task findById(LongParam id) {
-        return TASKS.get(id.get());
+    public Task findById(long id) {
+        return TASKS.get(id);
+    }
+
+    @Override
+    public Task complete(long taskId) {
+        Task completed = Task.complete(TASKS.get(taskId));
+        TASKS.put(taskId, completed);
+        return completed;
     }
 }

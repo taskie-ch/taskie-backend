@@ -1,5 +1,8 @@
 package com.taskie.core;
 
+import com.taskie.api.Id;
+import com.taskie.api.TaskInfo;
+
 public class Task {
 
     private final long id;
@@ -15,8 +18,16 @@ public class Task {
         return new Task(task, false);
     }
 
+    public static Task create(long id, String description, boolean done) {
+        return new Task(id, description, null, done);
+    }
+
     public static Task create(long id, String description, Rotation rotation) {
         return new Task(id, description, rotation, false);
+    }
+
+    public static Task create(Task task, Rotation rotation) {
+        return new Task(task.getId(), task.getDescription(), rotation, task.isDone());
     }
 
     private Task(Task task, boolean done) {
@@ -31,6 +42,14 @@ public class Task {
         this.description = description;
         this.rotation = rotation;
         this.done = done;
+    }
+
+    public Id deriveId() {
+        return new Id(id);
+    }
+
+    public TaskInfo deriveInfo() {
+        return new TaskInfo(description, done);
     }
 
     public long getId() {

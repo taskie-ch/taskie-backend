@@ -1,6 +1,6 @@
 package com.taskie.core;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 
@@ -19,12 +19,14 @@ public class Rotation {
         this.rotation = rotation;
     }
 
-    @JsonProperty
+    public Map<DateTime, User> getRotation() {
+        return rotation;
+    }
+
     public User getCurrent() {
         return get(dateTime -> dateTime.isBefore(DateTime.now()));
     }
 
-    @JsonProperty
     public User getNext() {
         return get(dateTime -> dateTime.isAfter(DateTime.now()));
     }
@@ -49,6 +51,13 @@ public class Rotation {
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("rotation", rotation)
+                .toString();
     }
 
     public static class Builder {

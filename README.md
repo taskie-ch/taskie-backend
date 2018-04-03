@@ -13,3 +13,11 @@ Health Check
 ---
 
 To see your applications health enter url `http://localhost:8081/healthcheck`
+
+
+
+## Example
+
+Set a rotation schedule for a task
+
+    curl -H "Content-Type: application/json" -X POST http://localhost:9090/taskSchedule/1 -d '{"dateToUser":"2018-04-01T23:22:35.448+02:00":"John","2018-04-05T23:22:35.448+02:00":"Jane"}'

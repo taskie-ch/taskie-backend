@@ -1,6 +1,8 @@
 package com.taskie.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.taskie.api.Id;
+import com.taskie.api.TaskInfo;
 import com.taskie.core.Task;
 import com.taskie.db.TaskDao;
 import io.dropwizard.jersey.params.LongParam;
@@ -10,9 +12,10 @@ import io.swagger.annotations.ApiOperation;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
-@Path("/task")
-@Api(value = "task")
+@Path("/tasks")
+@Api(value = "tasks")
 @Produces(MediaType.APPLICATION_JSON)
 public class TaskResource {
 
@@ -24,24 +27,51 @@ public class TaskResource {
 
     @GET
     @Timed
+    @ApiOperation(value = "Get all tasks")
+    public Collection<TaskInfo> getTasks() {
+        return taskDao.findAll().stream()
+                .map(Task::deriveInfo)
+                .collect(Collectors.toList());
+    }
+
+    @POST
+    @Timed
+    @ApiOperation(value = "Create a new task")
+    public Id createTask(TaskInfo taskInfo) {
+        return taskDao.save(taskInfo.getText(), taskInfo.isDone()).deriveId();
+    }
+
+    @GET
+    @Timed
     @Path("/{taskId}")
     @ApiOperation(value = "Get tasks by id")
-    public Task getTask(@PathParam("taskId") LongParam id) {
-        return taskDao.findById(id.get());
+    public TaskInfo getTask(@PathParam("taskId") LongParam id) {
+        Task task = taskDao.findById(id.get());
+        return new TaskInfo(task.getDescription(), task.isDone());
+    }
+
+
+    @DELETE
+    @Timed
+    @Path("/{taskId}")
+    @ApiOperation(value = "Delete tasks by id")
+    public Id deleteTask(@PathParam("taskId") LongParam id) {
+        return taskDao.delete(id.get()).deriveId();
     }
 
     @POST
     @Timed
     @Path("/{taskId}/complete")
     @ApiOperation(value = "Completes a task by id")
-    public Task completeTask(@PathParam("taskId") LongParam id) {
-        return taskDao.complete(id.get());
+    public TaskInfo completeTask(@PathParam("taskId") LongParam id) {
+        return taskDao.complete(id.get()).deriveInfo();
     }
 
-    @GET
+    @POST
     @Timed
-    @ApiOperation(value = "Get all tasks")
-    public Collection<Task> getTasks() {
-        return taskDao.findAll();
+    @Path("/{taskId}/uncomplete")
+    @ApiOperation(value = "Uncompletes a task by id")
+    public TaskInfo uncompleteTask(@PathParam("taskId") LongParam id) {
+        return taskDao.uncomplete(id.get()).deriveInfo();
     }
 }

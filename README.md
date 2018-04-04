@@ -7,17 +7,11 @@ How to start the Taskie Server application
 
 1. Run `mvn clean install` to build your application
 1. Start application with `java -jar target/taskie-backend-1.0-SNAPSHOT.jar server config.yml`
-1. To check that your application is running enter url `http://localhost:8080`
+1. To check that your application is running enter url `http://localhost:9090`
 
 Health Check
 ---
 
-To see your applications health enter url `http://localhost:8081/healthcheck`
+To see your applications health enter url `http://localhost:9091/healthcheck`
 
 
-
-## Example
-
-Set a rotation schedule for a task
-
-    curl -H "Content-Type: application/json" -X POST http://localhost:9090/taskSchedule/1 -d '{"dateToUser":"2018-04-01T23:22:35.448+02:00":"John","2018-04-05T23:22:35.448+02:00":"Jane"}'

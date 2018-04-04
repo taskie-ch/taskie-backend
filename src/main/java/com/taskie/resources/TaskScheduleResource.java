@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 @Path("/schedules")
@@ -50,9 +49,6 @@ public class TaskScheduleResource {
     @ApiOperation(value = "Set a schedule for a task")
     public void setRotation(@PathParam("taskId") LongParam id, TaskSchedule taskSchedule) {
         Task task = taskDao.findById(id.get());
-        if (task == null) {
-            throw new NoSuchElementException("No task for id " + id.get());
-        }
         Rotation.Builder builder = Rotation.newBuilder();
         taskSchedule.getDateToUser().forEach((dateTime, s) -> builder.addRotation(dateTime, new User(s)));
         Rotation rotation = builder.build();

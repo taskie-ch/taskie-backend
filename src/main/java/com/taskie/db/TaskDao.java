@@ -5,6 +5,7 @@ import com.taskie.core.Task;
 import com.taskie.core.User;
 import org.joda.time.DateTime;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,14 +36,16 @@ public class TaskDao {
         return task;
     }
 
-    public void update(Task task) {
+    public void update(@Nonnull Task task) {
         TASKS.put(task.getId(), task);
     }
 
+    @Nonnull
     public Collection<Task> findAll() {
         return TASKS.values();
     }
 
+    @Nonnull
     public Task findById(long id) {
         Task task = TASKS.get(id);
         if (task == null) {

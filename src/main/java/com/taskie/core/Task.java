@@ -30,6 +30,10 @@ public class Task {
         return new Task(task.getId(), task.getDescription(), rotation, task.isDone());
     }
 
+    public static Task create(Task task, boolean done) {
+        return new Task(task, done);
+    }
+
     private Task(Task task, boolean done) {
         this.id = task.id;
         this.description = task.description;

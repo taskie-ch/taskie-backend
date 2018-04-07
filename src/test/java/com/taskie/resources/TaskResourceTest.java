@@ -7,6 +7,9 @@ import com.taskie.db.TaskDao;
 import io.dropwizard.jersey.params.LongParam;
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -18,18 +21,20 @@ public class TaskResourceTest {
     private final TaskResource taskResource = new TaskResource(taskDao);
 
     private static final Task TASK = Task.create(1, "Some task", false);
-
+    private static final String TASK_ID = String.valueOf(TASK.getId());
 
     @Test
     public void getCollectionOfTasks() {
-
-
+        when(taskDao.findAll()).thenReturn(Collections.singleton(TASK));
+        Collection<TaskInfo> info = taskResource.getTasks();
+        assertEquals("Collection size", 1, info.size());
+        assertEquals("Task info from resource", TASK.deriveInfo(), info.iterator().next());
     }
 
     @Test
     public void getTask() {
         when(taskDao.findById(anyLong())).thenReturn(TASK);
-        TaskInfo info = taskResource.getTask(new LongParam("1"));
+        TaskInfo info = taskResource.getTask(new LongParam(TASK_ID));
         assertEquals("Task info from resource", TASK.deriveInfo(), info);
     }
 
@@ -43,15 +48,22 @@ public class TaskResourceTest {
     @Test
     public void deleteTask() {
         when(taskDao.delete(anyLong())).thenReturn(TASK);
-        Id id = taskResource.deleteTask(new LongParam("1"));
+        Id id = taskResource.deleteTask(new LongParam(TASK_ID));
         assertEquals("Deleted task id", TASK.deriveId(), id);
     }
 
     @Test
     public void completeTask() {
+        Task completeTask = Task.create(TASK, true);
+        when(taskDao.complete(anyLong())).thenReturn(completeTask);
+        TaskInfo info = taskResource.completeTask(new LongParam(TASK_ID));
+        assertEquals("Completed task", completeTask.deriveInfo(), info);
     }
 
     @Test
     public void uncompleteTask() {
+        when(taskDao.uncomplete(anyLong())).thenReturn(TASK);
+        TaskInfo info = taskResource.uncompleteTask(new LongParam(TASK_ID));
+        assertEquals("Uncompleted task", TASK.deriveInfo(), info);
     }
 }

@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class User implements Principal {
 
-    static final User NONE = new User("NONE");
+    public static final User NONE = new User("NONE");
 
     private final String name;
 

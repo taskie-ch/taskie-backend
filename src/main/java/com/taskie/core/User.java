@@ -2,9 +2,10 @@ package com.taskie.core;
 
 import com.google.common.base.MoreObjects;
 
+import java.security.Principal;
 import java.util.Objects;
 
-public class User {
+public class User implements Principal {
 
     static final User NONE = new User("NONE");
 
@@ -14,6 +15,7 @@ public class User {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }

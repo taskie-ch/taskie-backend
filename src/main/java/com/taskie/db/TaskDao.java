@@ -54,12 +54,14 @@ public class TaskDao {
         return task;
     }
 
+    @Nonnull
     public Task complete(long taskId) {
         Task completed = Task.complete(TASKS.get(taskId));
         TASKS.put(taskId, completed);
         return completed;
     }
 
+    @Nonnull
     public Task uncomplete(long taskId) {
         Task changed = Task.uncomplete(TASKS.get(taskId));
         TASKS.put(taskId, changed);

@@ -1,5 +1,6 @@
 package com.taskie;
 
+import com.taskie.auth.AuthConfiguration;
 import com.taskie.db.TaskDao;
 import com.taskie.health.TemplateHealthCheck;
 import com.taskie.resources.HelloWorldResource;
@@ -34,21 +35,33 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
     }
 
     @Override
-    public void run(final TaskieConfiguration conf,
+    public void run(final TaskieConfiguration config,
                     final Environment env) {
 
-        env.jersey().register(new IllegalArgumentExceptionMapper(env.metrics()));
+        AuthConfiguration.configure(env);
 
-        final HelloWorldResource resource = new HelloWorldResource(conf.getTemplate(), conf.getDefaultName());
+        configureExceptionMappers(env);
+        configureHelloWorld(config, env);
 
-        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(conf.getTemplate());
-        env.healthChecks().register("template", healthCheck);
-
-        env.jersey().register(resource);
 
         TaskDao taskDao = new TaskDao();
         env.jersey().register(new TaskResource(taskDao));
         env.jersey().register(new TaskScheduleResource(taskDao));
     }
 
+    private static void configureExceptionMappers(Environment env) {
+        env.jersey().register(new IllegalArgumentExceptionMapper(env.metrics()));
+    }
+
+    private static void configureHelloWorld(TaskieConfiguration config,
+                                            Environment env) {
+
+        final HelloWorldResource resource = new HelloWorldResource(config.getTemplate(), config.getDefaultName());
+
+        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(config.getTemplate());
+        env.healthChecks().register("template", healthCheck);
+
+        env.jersey().register(resource);
+
+    }
 }

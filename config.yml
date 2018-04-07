@@ -1,7 +1,12 @@
+# Logging settings.
 logging:
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
+  # Logger-specific levels.
   loggers:
     com.taskie: DEBUG
+
+
 server:
   applicationConnectors:
     - type: http
@@ -9,10 +14,24 @@ server:
   adminConnectors:
     - type: http
       port: 9091
-template: Hello, %s!
-defaultName: Stranger
 
 
 swagger:
   # a comma separated string of the packages that contain your @Api annotated resources
-  resourcePackage: com.taskie.resources
+  resourcePackage: com.taskie.resources,com.taskie.api
+
+# Graphite metrics settings.
+#metrics:
+#  reporters:
+#    - type: graphite
+#      host: localhost
+#      port: 2003
+#      prefix: taskie
+#      frequency: 1m
+
+
+# Taskie settings.
+template: Hello, %s!
+defaultName: Stranger
+
+

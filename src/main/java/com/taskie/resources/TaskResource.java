@@ -14,6 +14,9 @@ import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Resource for task access and manipulation.
+ */
 @Path("/tasks")
 @Api(value = "tasks")
 @Produces(MediaType.APPLICATION_JSON)
@@ -46,8 +49,7 @@ public class TaskResource {
     @Path("/{taskId}")
     @ApiOperation(value = "Get tasks by id")
     public TaskInfo getTask(@PathParam("taskId") LongParam id) {
-        Task task = taskDao.findById(id.get());
-        return new TaskInfo(task.getDescription(), task.isDone());
+        return taskDao.findById(id.get()).deriveInfo();
     }
 
 

@@ -1,29 +1,74 @@
 package com.taskie.core;
 
-import java.util.Objects;
+import com.taskie.api.Id;
+import com.taskie.api.TaskInfo;
 
 public class Task {
 
+    private final long id;
     private final String description;
+    private final Rotation rotation;
+    private final boolean done;
 
-    public Task(String description) {
+    public static Task complete(Task task) {
+        return new Task(task, true);
+    }
+
+    public static Task uncomplete(Task task) {
+        return new Task(task, false);
+    }
+
+    public static Task create(long id, String description, boolean done) {
+        return new Task(id, description, null, done);
+    }
+
+    public static Task create(long id, String description, Rotation rotation) {
+        return new Task(id, description, rotation, false);
+    }
+
+    public static Task create(Task task, Rotation rotation) {
+        return new Task(task.getId(), task.getDescription(), rotation, task.isDone());
+    }
+
+    public static Task create(Task task, boolean done) {
+        return new Task(task, done);
+    }
+
+    private Task(Task task, boolean done) {
+        this.id = task.id;
+        this.description = task.description;
+        this.rotation = task.rotation;
+        this.done = done;
+    }
+
+    private Task(long id, String description, Rotation rotation, boolean done) {
+        this.id = id;
         this.description = description;
+        this.rotation = rotation;
+        this.done = done;
+    }
+
+    public Id deriveId() {
+        return new Id(id);
+    }
+
+    public TaskInfo deriveInfo() {
+        return new TaskInfo(description, done);
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getDescription() {
         return description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return Objects.equals(description, task.description);
+    public Rotation getRotation() {
+        return rotation;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(description);
+    public boolean isDone() {
+        return done;
     }
 }

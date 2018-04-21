@@ -26,6 +26,10 @@ public class Absence {
         return to;
     }
 
+    public boolean match(final DateTime date) {
+        return from.isBefore(date) && to.isAfter(date);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

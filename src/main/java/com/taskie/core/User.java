@@ -1,8 +1,11 @@
 package com.taskie.core;
 
 import com.google.common.base.MoreObjects;
+import org.joda.time.DateTime;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class User implements Principal {
@@ -10,6 +13,7 @@ public class User implements Principal {
     public static final User NONE = new User("NONE");
 
     private final String name;
+    private final List<Absence> absences = new ArrayList<>();
 
     public User(String name) {
         this.name = name;
@@ -18,6 +22,14 @@ public class User implements Principal {
     @Override
     public String getName() {
         return name;
+    }
+
+    public void addAbsence(Absence absence) {
+        absences.add(absence);
+    }
+
+    public boolean isAbsent(final DateTime date) {
+        return absences.stream().anyMatch(absence -> absence.match(date));
     }
 
     @Override

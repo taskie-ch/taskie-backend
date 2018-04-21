@@ -40,8 +40,8 @@ public class TaskResourceTest {
 
     @Test
     public void createTask() {
-        when(taskDao.save("Some task", false)).thenReturn(TASK);
-        Id id = taskResource.createTask(TASK.deriveInfo());
+        when(taskDao.save("Some task")).thenReturn(TASK);
+        Id id = taskResource.createTask(TASK.deriveCreate());
         assertEquals("Created task id", TASK.deriveId(), id);
     }
 

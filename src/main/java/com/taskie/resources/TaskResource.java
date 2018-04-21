@@ -2,6 +2,7 @@ package com.taskie.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.taskie.api.Id;
+import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
 import com.taskie.core.Task;
 import com.taskie.db.TaskDao;
@@ -40,8 +41,8 @@ public class TaskResource {
     @POST
     @Timed
     @ApiOperation(value = "Create a new task")
-    public Id createTask(TaskInfo taskInfo) {
-        return taskDao.save(taskInfo.getText(), taskInfo.isDone()).deriveId();
+    public Id createTask(TaskCreate taskCreate) {
+        return taskDao.save(taskCreate.getTitle()).deriveId();
     }
 
     @GET

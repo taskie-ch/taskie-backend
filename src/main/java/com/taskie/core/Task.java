@@ -1,7 +1,10 @@
 package com.taskie.core;
 
+import com.google.common.collect.Lists;
 import com.taskie.api.Id;
+import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
+import org.joda.time.DateTime;
 
 public class Task {
 
@@ -53,7 +56,13 @@ public class Task {
     }
 
     public TaskInfo deriveInfo() {
-        return new TaskInfo(description, done);
+        // TODO
+        return new TaskInfo(id, description, "Daily", new DateTime(0).toString(),
+                1, done, Lists.asList("Tom", new String[]{"Jane", "John"}));
+    }
+
+    public TaskCreate deriveCreate() {
+        return new TaskCreate(description, "Daily", new DateTime(0).toString(), 1);
     }
 
     public long getId() {

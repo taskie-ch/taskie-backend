@@ -30,8 +30,8 @@ public class TaskDao {
         return TASKS.remove(taskId);
     }
 
-    public Task save(String taskDescription, boolean done) {
-        Task task = Task.create(UID_GENERATOR.getAndIncrement(), taskDescription, done);
+    public Task save(String title) {
+        Task task = Task.create(UID_GENERATOR.getAndIncrement(), title, false);
         TASKS.put(task.getId(), task);
         return task;
     }

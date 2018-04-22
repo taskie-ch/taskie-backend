@@ -3,6 +3,8 @@ package com.taskie;
 import com.taskie.auth.AuthConfiguration;
 import com.taskie.db.FlatDao;
 import com.taskie.db.TaskDao;
+import com.taskie.health.FlatServiceHealthCheck;
+import com.taskie.health.TaskServiceHealthCheck;
 import com.taskie.health.TemplateHealthCheck;
 import com.taskie.resources.HelloWorldResource;
 import com.taskie.resources.TaskResource;
@@ -44,8 +46,12 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         configureExceptionMappers(env);
         configureHelloWorld(config, env);
 
+        FlatDao flatDao = new FlatDao();
+        TaskDao taskDao = new TaskDao(flatDao);
 
-        TaskDao taskDao = new TaskDao(new FlatDao());
+        env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatDao));
+        env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskDao));
+
         env.jersey().register(new TaskResource(taskDao));
         env.jersey().register(new TaskScheduleResource(taskDao));
     }

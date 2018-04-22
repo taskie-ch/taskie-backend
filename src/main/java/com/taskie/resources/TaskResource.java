@@ -42,7 +42,7 @@ public class TaskResource {
     @Timed
     @ApiOperation(value = "Create a new task")
     public Id createTask(TaskCreate taskCreate) {
-        return taskDao.save(taskCreate.getTitle()).deriveId();
+        return taskDao.save(taskCreate).deriveId();
     }
 
     @GET
@@ -66,15 +66,15 @@ public class TaskResource {
     @Timed
     @Path("/{taskId}/complete")
     @ApiOperation(value = "Completes a task by id")
-    public TaskInfo completeTask(@PathParam("taskId") LongParam id) {
-        return taskDao.complete(id.get()).deriveInfo();
+    public void completeTask(@PathParam("taskId") LongParam id) {
+        taskDao.complete(id.get());
     }
 
     @POST
     @Timed
     @Path("/{taskId}/uncomplete")
     @ApiOperation(value = "Uncompletes a task by id")
-    public TaskInfo uncompleteTask(@PathParam("taskId") LongParam id) {
-        return taskDao.uncomplete(id.get()).deriveInfo();
+    public void uncompleteTask(@PathParam("taskId") LongParam id) {
+        taskDao.uncomplete(id.get());
     }
 }

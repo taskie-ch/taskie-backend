@@ -1,6 +1,7 @@
 package com.taskie;
 
 import com.taskie.auth.AuthConfiguration;
+import com.taskie.db.FlatDao;
 import com.taskie.db.TaskDao;
 import com.taskie.health.TemplateHealthCheck;
 import com.taskie.resources.HelloWorldResource;
@@ -44,7 +45,7 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         configureHelloWorld(config, env);
 
 
-        TaskDao taskDao = new TaskDao();
+        TaskDao taskDao = new TaskDao(new FlatDao());
         env.jersey().register(new TaskResource(taskDao));
         env.jersey().register(new TaskScheduleResource(taskDao));
     }

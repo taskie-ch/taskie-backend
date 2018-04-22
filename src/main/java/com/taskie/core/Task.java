@@ -1,54 +1,51 @@
 package com.taskie.core;
 
-import com.google.common.collect.Lists;
 import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
+
 public class Task {
 
     private final long id;
-    private final String description;
-    private final Rotation rotation;
-    private final boolean done;
+    private final String title;
+    private final Effort effort;
+    private final Frequency frequency;
+    private final DateTime startDate;
+    private final List<TaskOccurence> occurences;
 
-    public static Task complete(Task task) {
-        return new Task(task, true);
-    }
-
-    public static Task uncomplete(Task task) {
-        return new Task(task, false);
-    }
-
-    public static Task create(long id, String description, boolean done) {
-        return new Task(id, description, null, done);
-    }
-
-    public static Task create(long id, String description, Rotation rotation) {
-        return new Task(id, description, rotation, false);
-    }
-
-    public static Task create(Task task, Rotation rotation) {
-        return new Task(task.getId(), task.getDescription(), rotation, task.isDone());
-    }
-
-    public static Task create(Task task, boolean done) {
-        return new Task(task, done);
-    }
-
-    private Task(Task task, boolean done) {
-        this.id = task.id;
-        this.description = task.description;
-        this.rotation = task.rotation;
-        this.done = done;
-    }
-
-    private Task(long id, String description, Rotation rotation, boolean done) {
+    private Task(long id, String title, Effort effort, Frequency frequency,
+                 DateTime startDate, List<TaskOccurence> occurences) {
         this.id = id;
-        this.description = description;
-        this.rotation = rotation;
-        this.done = done;
+        this.title = title;
+        this.effort = effort;
+        this.frequency = frequency;
+        this.startDate = startDate;
+        this.occurences = occurences;
+    }
+
+    public void complete() {
+        occurences.stream().filter(TaskOccurence::isPending)
+                .findFirst().ifPresent(TaskOccurence::complete);
+    }
+
+    public void uncomplete() {
+        occurences.stream().filter(TaskOccurence::isDone)
+                .findFirst().ifPresent(TaskOccurence::uncomplete);
+    }
+
+    private List<String> getRotationNames() {
+        return occurences.stream()
+                .map(TaskOccurence::getAssignee)
+                .map(User::getName)
+                .collect(Collectors.toList());
     }
 
     public Id deriveId() {
@@ -56,28 +53,123 @@ public class Task {
     }
 
     public TaskInfo deriveInfo() {
-        // TODO
-        return new TaskInfo(id, description, "Daily", new DateTime(0).toString(),
-                1, done, Lists.asList("Tom", new String[]{"Jane", "John"}));
+        TaskOccurence occurence = occurences.get(0);
+        return new TaskInfo(id, title, frequency.toString(), occurence.getDate().toString(),
+                effort.getValue(), occurence.isDone(), getRotationNames());
     }
 
     public TaskCreate deriveCreate() {
-        return new TaskCreate(description, "Daily", new DateTime(0).toString(), 1);
+        return new TaskCreate(title, frequency.toString(), occurences.get(0).getDate().toString(), effort.getValue());
     }
 
     public long getId() {
         return id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTitle() {
+        return title;
     }
 
-    public Rotation getRotation() {
-        return rotation;
+    public Effort getEffort() {
+        return effort;
     }
 
-    public boolean isDone() {
-        return done;
+    public Frequency getFrequency() {
+        return frequency;
+    }
+
+    public DateTime getStartDate() {
+        return startDate;
+    }
+
+    public List<TaskOccurence> getOccurences() {
+        return occurences;
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder(TaskCreate taskCreate) {
+        return new Builder(taskCreate);
+    }
+
+    public static Builder newBuilder(Task task) {
+        return new Builder(task);
+    }
+
+    public static class Builder {
+
+        private long id = -1;
+        private String title;
+        private Effort effort;
+        private Frequency frequency;
+        private DateTime startDate;
+        private List<TaskOccurence> occurences = new ArrayList<>();
+
+        private Builder() {
+            // default private constructor
+        }
+
+        private Builder(Task task) {
+            setId(task.getId());
+            setTitle(task.getTitle());
+            setEffort(task.getEffort());
+            setFrequency(task.getFrequency());
+            setStartDate(task.getStartDate());
+            addOccurences(task.getOccurences());
+        }
+
+        public Builder(TaskCreate taskCreate) {
+            setTitle(taskCreate.getTitle());
+            setFrequency(Frequency.valueOf(taskCreate.getFrequency().toUpperCase()));
+            setEffort(Effort.valueOf(taskCreate.getEffort()));
+            setStartDate(DateTime.parse(taskCreate.getStart()));
+        }
+
+        public Builder setId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder setEffort(Effort effort) {
+            this.effort = effort;
+            return this;
+        }
+
+        public Builder setFrequency(Frequency frequency) {
+            this.frequency = frequency;
+            return this;
+        }
+
+        public Builder setStartDate(DateTime startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        public Builder addOccurences(List<TaskOccurence> occurences) {
+            occurences.forEach(this::addOccurence);
+            return this;
+        }
+
+        public Builder addOccurence(TaskOccurence occurence) {
+            requireNonNull(occurence, "Task occurence is required");
+            occurences.add(occurence);
+            return this;
+        }
+
+        public Task build() {
+            checkState(id >= 0, "Id is required");
+            requireNonNull(title, "Title is required");
+            requireNonNull(effort, "Effort is required");
+            requireNonNull(frequency, "Frequency is required");
+            requireNonNull(startDate, "Start date is required");
+            return new Task(id, title, effort, frequency, startDate, occurences);
+        }
     }
 }

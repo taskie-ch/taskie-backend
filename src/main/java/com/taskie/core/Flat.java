@@ -9,14 +9,20 @@ import java.util.stream.Collectors;
 
 public class Flat {
 
+    private final long id;
     private final String name;
     private final Set<User> users;
     private final HallOfFame hallOfFame;
 
-    public Flat(String name, Set<User> users, HallOfFame hallOfFame) {
+    public Flat(long id, String name, Set<User> users, HallOfFame hallOfFame) {
+        this.id = id;
         this.name = name;
         this.users = users;
         this.hallOfFame = hallOfFame;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {

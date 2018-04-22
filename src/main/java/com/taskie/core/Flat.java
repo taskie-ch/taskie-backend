@@ -1,20 +1,28 @@
 package com.taskie.core;
 
 import com.google.common.base.MoreObjects;
+import org.joda.time.DateTime;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Flat {
 
+    private final long id;
     private final String name;
     private final Set<User> users;
     private final HallOfFame hallOfFame;
 
-    public Flat(String name, Set<User> users, HallOfFame hallOfFame) {
+    public Flat(long id, String name, Set<User> users, HallOfFame hallOfFame) {
+        this.id = id;
         this.name = name;
         this.users = users;
         this.hallOfFame = hallOfFame;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {
@@ -27,6 +35,10 @@ public class Flat {
 
     public HallOfFame getHallOfFame() {
         return hallOfFame;
+    }
+
+    public Set<User> getAbsenceForDate(final DateTime date) {
+        return users.stream().filter(user -> user.isAbsent(date)).collect(Collectors.toSet());
     }
 
     @Override

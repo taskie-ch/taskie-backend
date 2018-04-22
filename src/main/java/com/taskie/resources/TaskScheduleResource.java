@@ -2,9 +2,6 @@ package com.taskie.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.taskie.api.TaskSchedule;
-import com.taskie.core.Rotation;
-import com.taskie.core.Task;
-import com.taskie.core.User;
 import com.taskie.db.TaskDao;
 import io.dropwizard.jersey.params.LongParam;
 import io.swagger.annotations.Api;
@@ -37,9 +34,10 @@ public class TaskScheduleResource {
     @Path("/{taskId}")
     @ApiOperation(value = "Get the schedule for a task")
     public TaskSchedule getRotation(@PathParam("taskId") LongParam id) {
-        Map<DateTime, User> rotation = taskDao.findById(id.get()).getRotation().getRotation();
+        // TODO evaluate if still needed
+//        Map<DateTime, User> rotation = taskDao.findById(id.get()).getRotation().getRotation();
         Map<DateTime, String> schedule = new TreeMap<>(DateTimeComparator.getInstance());
-        rotation.forEach((dateTime, user) -> schedule.put(dateTime, user.getName()));
+//        rotation.forEach((dateTime, user) -> schedule.put(dateTime, user.getName()));
         return new TaskSchedule(schedule);
     }
 
@@ -48,12 +46,13 @@ public class TaskScheduleResource {
     @Path("/{taskId}")
     @ApiOperation(value = "Set a schedule for a task")
     public void setRotation(@PathParam("taskId") LongParam id, TaskSchedule taskSchedule) {
-        Task task = taskDao.findById(id.get());
-        Rotation.Builder builder = Rotation.newBuilder();
-        taskSchedule.getDateToUser().forEach((dateTime, s) -> builder.addRotation(dateTime, new User(s)));
-        Rotation rotation = builder.build();
-        LOG.info("POST task schedule: {}->{}", id.get(), rotation);
-
-        taskDao.update(Task.create(task, rotation));
+        // TODO evaluate if still needed
+//        Task task = taskDao.findById(id.get());
+//        Rotation.Builder builder = Rotation.newBuilder();
+//        taskSchedule.getDateToUser().forEach((dateTime, s) -> builder.addRotation(dateTime, new User(s)));
+//        Rotation rotation = builder.build();
+//        LOG.info("POST task schedule: {}->{}", id.get(), rotation);
+//
+//        taskDao.update(Task.create(task, rotation));
     }
 }

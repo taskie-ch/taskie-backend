@@ -1,8 +1,7 @@
 package com.taskie.db;
 
-import com.taskie.core.Rotation;
-import com.taskie.core.Task;
-import com.taskie.core.User;
+import com.taskie.api.TaskCreate;
+import com.taskie.core.*;
 import org.joda.time.DateTime;
 
 import javax.annotation.Nonnull;
@@ -16,22 +15,25 @@ public class TaskDao {
     private static final Map<Long, Task> TASKS = new HashMap<>();
     private static final AtomicLong UID_GENERATOR = new AtomicLong(1);
 
-    static {
+    private final TaskOccurenceFactory factory = new TaskOccurenceFactory();
+    private final FlatDao flatDao;
 
-        Rotation rota = Rotation.newBuilder()
-                .addRotation(DateTime.now().minusDays(1), new User("Simon"))
-                .build();
-        TASKS.put(UID_GENERATOR.getAndIncrement(), Task.create(1L, "test1", rota));
-        TASKS.put(UID_GENERATOR.getAndIncrement(), Task.create(2L, "test2", rota));
-        TASKS.put(UID_GENERATOR.getAndIncrement(), Task.create(3L, "test3", rota));
+
+    public TaskDao(@Nonnull FlatDao flatDao) {
+        this.flatDao = flatDao;
+        save(new TaskCreate("Do something", Frequency.DAILY.toString(),
+                DateTime.now().toString(), Effort.LOW.getValue()));
     }
 
     public Task delete(long taskId) {
         return TASKS.remove(taskId);
     }
 
-    public Task save(String taskDescription, boolean done) {
-        Task task = Task.create(UID_GENERATOR.getAndIncrement(), taskDescription, done);
+    public Task save(@Nonnull TaskCreate taskCreate) {
+        Task task = Task.newBuilder(taskCreate)
+                .setId(UID_GENERATOR.getAndIncrement())
+                .addOccurences(factory.apply(taskCreate, flatDao.findById(1).getUsers()))
+                .build();
         TASKS.put(task.getId(), task);
         return task;
     }
@@ -54,18 +56,11 @@ public class TaskDao {
         return task;
     }
 
-    @Nonnull
-    public Task complete(long taskId) {
-        Task completed = Task.complete(TASKS.get(taskId));
-        TASKS.put(taskId, completed);
-        return completed;
+    public void complete(long taskId) {
+        findById(taskId).complete();
     }
 
-    @Nonnull
-    public Task uncomplete(long taskId) {
-        Task changed = Task.uncomplete(TASKS.get(taskId));
-        TASKS.put(taskId, changed);
-        return changed;
+    public void uncomplete(long taskId) {
+        findById(taskId).uncomplete();
     }
-
 }

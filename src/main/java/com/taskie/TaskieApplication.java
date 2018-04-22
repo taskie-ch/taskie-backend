@@ -3,8 +3,6 @@ package com.taskie;
 import com.taskie.auth.AuthConfiguration;
 import com.taskie.db.FlatDao;
 import com.taskie.db.TaskDao;
-import com.taskie.health.TemplateHealthCheck;
-import com.taskie.resources.HelloWorldResource;
 import com.taskie.resources.TaskResource;
 import com.taskie.resources.TaskScheduleResource;
 import com.taskie.resources.error.IllegalArgumentExceptionMapper;
@@ -18,11 +16,6 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
     public static void main(final String[] args) throws Exception {
         new TaskieApplication().run(args);
-    }
-
-    @Override
-    public String getName() {
-        return "Taskie Server";
     }
 
     @Override
@@ -42,8 +35,6 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         AuthConfiguration.configure(env);
 
         configureExceptionMappers(env);
-        configureHelloWorld(config, env);
-
 
         TaskDao taskDao = new TaskDao(new FlatDao());
         env.jersey().register(new TaskResource(taskDao));
@@ -52,17 +43,5 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
     private static void configureExceptionMappers(Environment env) {
         env.jersey().register(new IllegalArgumentExceptionMapper(env.metrics()));
-    }
-
-    private static void configureHelloWorld(TaskieConfiguration config,
-                                            Environment env) {
-
-        final HelloWorldResource resource = new HelloWorldResource(config.getTemplate(), config.getDefaultName());
-
-        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(config.getTemplate());
-        env.healthChecks().register("template", healthCheck);
-
-        env.jersey().register(resource);
-
     }
 }

@@ -31,7 +31,3 @@ swagger:
 
 
 # Taskie settings.
-template: Hello, %s!
-defaultName: Stranger
-
-

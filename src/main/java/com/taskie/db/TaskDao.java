@@ -23,6 +23,10 @@ public class TaskDao {
         this.flatDao = flatDao;
         save(new TaskCreate("Do something", Frequency.DAILY.toString(),
                 DateTime.now().toString(), Effort.LOW.getValue()));
+        save(new TaskCreate("Do something else", Frequency.MONTHLY.toString(),
+                DateTime.now().toString(), Effort.LOW.getValue()));
+        save(new TaskCreate("Be awesome", Frequency.WEEKLY.toString(),
+                DateTime.now().toString(), Effort.LOW.getValue()));
     }
 
     public Task delete(long taskId) {

@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkState;
 public enum Effort {
 
     LOW(1),
-    MID(2),
-    HIGH(3);
+    HIGH(2),
+    HUGE(3);
 
     private final int value;
 

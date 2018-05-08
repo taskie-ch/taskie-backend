@@ -6,7 +6,6 @@ import com.taskie.db.TaskDao;
 import com.taskie.health.FlatServiceHealthCheck;
 import com.taskie.health.TaskServiceHealthCheck;
 import com.taskie.resources.TaskResource;
-import com.taskie.resources.TaskScheduleResource;
 import com.taskie.resources.error.IllegalArgumentExceptionMapper;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -45,7 +44,6 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskDao));
 
         env.jersey().register(new TaskResource(taskDao));
-        env.jersey().register(new TaskScheduleResource(taskDao));
     }
 
     private static void configureExceptionMappers(Environment env) {

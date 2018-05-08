@@ -85,7 +85,6 @@ public class TaskInfo {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, title, frequency, start, effort, done, users);
     }
 

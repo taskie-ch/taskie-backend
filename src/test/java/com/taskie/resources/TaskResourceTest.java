@@ -3,34 +3,24 @@ package com.taskie.resources;
 import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
-import com.taskie.core.*;
 import com.taskie.db.TaskDao;
 import io.dropwizard.jersey.params.LongParam;
-import org.joda.time.DateTime;
 import org.junit.Test;
 
 import java.util.Collection;
 import java.util.Collections;
 
+import static com.taskie.util.TestData.TASK;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TaskResourceTest {
 
     private final TaskDao taskDao = mock(TaskDao.class);
     private final TaskResource taskResource = new TaskResource(taskDao);
 
-    private static final Task TASK = Task.newBuilder().setId(1)
-            .setTitle("Some task")
-            .setFrequency(Frequency.DAILY)
-            .setEffort(Effort.LOW)
-            .setStartDate(DateTime.now())
-            .addOccurence(new TaskOccurence(DateTime.now(), new User("User")))
-            .build();
     private static final String TASK_ID = String.valueOf(TASK.getId());
 
     @Test

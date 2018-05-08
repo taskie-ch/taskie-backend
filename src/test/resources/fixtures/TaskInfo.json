@@ -1,0 +1,12 @@
+{
+  "id": "1",
+  "title": "My Task",
+  "frequency": "Weekly",
+  "start": "2018-05-20T08:40:19.172Z",
+  "effort": "1",
+  "done": false,
+  "users": [
+    "Joe",
+    "Jane"
+  ]
+}

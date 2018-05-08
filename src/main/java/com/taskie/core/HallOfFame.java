@@ -7,13 +7,13 @@ import java.util.Objects;
 
 public class HallOfFame {
 
-    private final Map<User, Score> scores;
+    private final Map<UserPrincipal, Score> scores;
 
-    public HallOfFame(Map<User, Score> scores) {
+    public HallOfFame(Map<UserPrincipal, Score> scores) {
         this.scores = scores;
     }
 
-    public Map<User, Score> getScores() {
+    public Map<UserPrincipal, Score> getScores() {
         return scores;
     }
 

@@ -1,6 +1,7 @@
 package com.taskie.core;
 
 import com.google.common.base.MoreObjects;
+import com.taskie.api.User;
 import org.joda.time.DateTime;
 
 import java.security.Principal;
@@ -8,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class User implements Principal {
+public class UserPrincipal implements Principal {
 
-    public static final User NONE = new User("NONE");
+    public static final UserPrincipal NONE = new UserPrincipal("NONE");
 
     private final String name;
     private final List<Absence> absences = new ArrayList<>();
 
-    public User(String name) {
+    public UserPrincipal(String name) {
         this.name = name;
     }
 
@@ -32,11 +33,16 @@ public class User implements Principal {
         return absences.stream().anyMatch(absence -> absence.match(date));
     }
 
+    public User deriveUser() {
+        // TODO wire together
+        return new User("123", name, 1);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
+        UserPrincipal user = (UserPrincipal) o;
         return Objects.equals(name, user.name);
     }
 

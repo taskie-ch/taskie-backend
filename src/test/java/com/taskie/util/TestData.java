@@ -17,14 +17,16 @@ public final class TestData {
         // utility constructor
     }
 
+    private static final UserPrincipal USER_PRINCIPAL = new UserPrincipal("Joe");
+
     public static final Task TASK = Task.newBuilder()
             .setId(1)
             .setTitle("Some task")
             .setFrequency(Frequency.DAILY)
             .setEffort(Effort.LOW)
             .setStartDate(DateTime.now())
-            .addOccurence(new TaskOccurence(DateTime.now(), new User("Joe")))
-            .addOccurence(new TaskOccurence(DateTime.now().plusDays(1), new User("Jane")))
+            .addOccurence(new TaskOccurence(DateTime.now(), new UserPrincipal("Joe")))
+            .addOccurence(new TaskOccurence(DateTime.now().plusDays(1), new UserPrincipal("Jane")))
             .build();
 
     public static final TaskInfo TASK_INFO = new TaskInfo(1, "My Task", "Weekly",
@@ -35,5 +37,9 @@ public final class TestData {
 
     public static Id id() {
         return TASK.deriveId();
+    }
+
+    public static UserPrincipal userPrincipal() {
+        return USER_PRINCIPAL;
     }
 }

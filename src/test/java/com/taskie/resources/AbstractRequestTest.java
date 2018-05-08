@@ -2,8 +2,15 @@ package com.taskie.resources;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.taskie.auth.SimpleAuthenticator;
+import com.taskie.auth.SimpleAuthorizer;
+import com.taskie.core.UserPrincipal;
 import com.taskie.resources.error.IllegalArgumentExceptionMapper;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.SafeAuthDynamicFeature;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.junit.Rule;
 
 import javax.ws.rs.client.Invocation;
@@ -45,7 +52,7 @@ public abstract class AbstractRequestTest {
     }
 
     /**
-     * Builds a test rule from resource using own exception mappers.
+     * Builds a test rule from resource using own exception mappers and authentication.
      *
      * @param resource endpoint resource
      * @return endpoint rule
@@ -58,6 +65,13 @@ public abstract class AbstractRequestTest {
         return ResourceTestRule.builder()
                 .setRegisterDefaultExceptionMappers(false)
                 .addResource(new IllegalArgumentExceptionMapper(metricRegistry))
+                .addProvider(new SafeAuthDynamicFeature(
+                        new BasicCredentialAuthFilter.Builder<UserPrincipal>()
+                                .setAuthenticator(new SimpleAuthenticator())
+                                .setAuthorizer(new SimpleAuthorizer())
+                                .buildAuthFilter()))
+                .addProvider(RolesAllowedDynamicFeature.class)
+                .addProvider(new AuthValueFactoryProvider.Binder<>(UserPrincipal.class))
                 .addResource(resource)
                 .build();
     }

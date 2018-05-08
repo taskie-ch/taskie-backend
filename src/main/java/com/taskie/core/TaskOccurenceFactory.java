@@ -10,12 +10,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TaskOccurenceFactory {
 
-    public List<TaskOccurence> apply(TaskCreate task, Collection<User> users) {
+    public List<TaskOccurence> apply(TaskCreate task, Collection<UserPrincipal> users) {
 
         List<TaskOccurence> occurences = new ArrayList<>(users.size());
         DateTime date = rand(DateTime.parse(task.getStart()));
 
-        for (User user : users) {
+        for (UserPrincipal user : users) {
             occurences.add(new TaskOccurence(date, user));
             date = Frequency.valueOf(task.getFrequency().toUpperCase()).apply(date);
         }

@@ -11,10 +11,10 @@ public class Flat {
 
     private final long id;
     private final String name;
-    private final Set<User> users;
+    private final Set<UserPrincipal> users;
     private final HallOfFame hallOfFame;
 
-    public Flat(long id, String name, Set<User> users, HallOfFame hallOfFame) {
+    public Flat(long id, String name, Set<UserPrincipal> users, HallOfFame hallOfFame) {
         this.id = id;
         this.name = name;
         this.users = users;
@@ -29,7 +29,7 @@ public class Flat {
         return name;
     }
 
-    public Set<User> getUsers() {
+    public Set<UserPrincipal> getUsers() {
         return users;
     }
 
@@ -37,7 +37,7 @@ public class Flat {
         return hallOfFame;
     }
 
-    public Set<User> getAbsenceForDate(final DateTime date) {
+    public Set<UserPrincipal> getAbsenceForDate(final DateTime date) {
         return users.stream().filter(user -> user.isAbsent(date)).collect(Collectors.toSet());
     }
 

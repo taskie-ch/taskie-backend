@@ -8,6 +8,6 @@ import com.taskie.util.TestData;
 public class TaskCreateTest extends AbstractSerializationTest<TaskCreate> {
 
     public TaskCreateTest() {
-        super(TestData.TASK_CREATE);
+        super(TestData.taskCreate());
     }
 }

@@ -14,7 +14,6 @@ public class TaskInfo {
     private final String frequency;
     private final String start;
     private final int effort;
-    private final boolean done;
     private final List<String> users;
 
     @JsonCreator
@@ -23,14 +22,12 @@ public class TaskInfo {
                     @JsonProperty("frequency") String frequency,
                     @JsonProperty("start") String start,
                     @JsonProperty("effort") int effort,
-                    @JsonProperty("done") boolean done,
-                    @JsonProperty("users") List<String> users) {
+                    @JsonProperty("usersRotation") List<String> users) {
         this.id = id;
         this.title = title;
         this.frequency = frequency;
         this.start = start;
         this.effort = effort;
-        this.done = done;
         this.users = users;
     }
 
@@ -59,12 +56,7 @@ public class TaskInfo {
         return effort;
     }
 
-    @JsonProperty("done")
-    public boolean isDone() {
-        return done;
-    }
-
-    @JsonProperty("users")
+    @JsonProperty("usersRotation")
     public List<String> getUsers() {
         return users;
     }
@@ -76,7 +68,6 @@ public class TaskInfo {
         TaskInfo taskInfo = (TaskInfo) o;
         return id == taskInfo.id &&
                 effort == taskInfo.effort &&
-                done == taskInfo.done &&
                 Objects.equals(title, taskInfo.title) &&
                 Objects.equals(frequency, taskInfo.frequency) &&
                 Objects.equals(start, taskInfo.start) &&
@@ -85,7 +76,7 @@ public class TaskInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, frequency, start, effort, done, users);
+        return Objects.hash(id, title, frequency, start, effort, users);
     }
 
     @Override
@@ -96,7 +87,6 @@ public class TaskInfo {
                 .add("frequency", frequency)
                 .add("start", start)
                 .add("effort", effort)
-                .add("done", done)
                 .add("users", users)
                 .toString();
     }

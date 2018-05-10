@@ -14,22 +14,22 @@ import java.util.Arrays;
 public final class TestData {
 
 
-    private static final UserPrincipal USER_PRINCIPAL = new UserPrincipal("Joe");
+    private static final UserPrincipal USER_PRINCIPAL = new UserPrincipal("id_joe", "Joe");
     public static final Task TASK = Task.newBuilder()
             .setId(1)
-            .setTitle("Some task")
-            .setFrequency(Frequency.DAILY)
+            .setTitle("My Task")
+            .setFrequency(Frequency.WEEKLY)
             .setEffort(Effort.LOW)
             .setStartDate(DateTime.now())
-            .addOccurence(new TaskOccurence(DateTime.now(), new UserPrincipal("Joe")))
-            .addOccurence(new TaskOccurence(DateTime.now().plusDays(1), new UserPrincipal("Jane")))
+            .addOccurence(new TaskOccurence(DateTime.now(), USER_PRINCIPAL))
+            .addOccurence(new TaskOccurence(DateTime.now().plusDays(1), new UserPrincipal("id_jane", "Jane")))
             .build();
 
-    public static final TaskInfo TASK_INFO = new TaskInfo(1, "My Task", "Weekly",
-            "2018-05-20T08:40:19.172Z", 1, false, Arrays.asList("Joe", "Jane"));
+    public static final TaskInfo TASK_INFO = new TaskInfo(TASK.getId(), TASK.getTitle(), TASK.getFrequency().name(),
+            "2018-05-20T08:40:19.172Z", TASK.getEffort().getValue(), Arrays.asList("id_joe", "id_jane"));
 
-    public static final TaskCreate TASK_CREATE =
-            new TaskCreate("My Task", Frequency.WEEKLY.toString(), "2018-05-20T08:40:19.172Z", 1);
+    private static final TaskCreate TASK_CREATE = new TaskCreate(TASK.getTitle(), TASK.getFrequency().name(),
+            "2018-05-20T08:40:19.172Z", TASK.getEffort().getValue());
 
     private TestData() {
         // utility constructor
@@ -37,6 +37,14 @@ public final class TestData {
 
     public static Id id() {
         return TASK.deriveId();
+    }
+
+    public static TaskInfo taskInfo() {
+        return TASK_INFO;
+    }
+
+    public static TaskCreate taskCreate() {
+        return TASK_CREATE;
     }
 
     public static UserPrincipal userPrincipal() {

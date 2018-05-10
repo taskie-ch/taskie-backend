@@ -13,12 +13,8 @@ import java.util.Arrays;
  */
 public final class TestData {
 
-    private TestData() {
-        // utility constructor
-    }
 
     private static final UserPrincipal USER_PRINCIPAL = new UserPrincipal("Joe");
-
     public static final Task TASK = Task.newBuilder()
             .setId(1)
             .setTitle("Some task")
@@ -34,6 +30,10 @@ public final class TestData {
 
     public static final TaskCreate TASK_CREATE =
             new TaskCreate("My Task", Frequency.WEEKLY.toString(), "2018-05-20T08:40:19.172Z", 1);
+
+    private TestData() {
+        // utility constructor
+    }
 
     public static Id id() {
         return TASK.deriveId();

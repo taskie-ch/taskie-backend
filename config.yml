@@ -15,7 +15,11 @@ server:
     - type: http
       port: 9091
 
+# Cors settings.
+cors:
+  origins: "*"
 
+# Swagger settings.
 swagger:
   # a comma separated string of the packages that contain your @Api annotated resources
   resourcePackage: com.taskie.resources,com.taskie.api

@@ -1,5 +1,6 @@
 package com.taskie;
 
+import ca.grimoire.dropwizard.cors.CorsBundle;
 import com.taskie.auth.AuthConfiguration;
 import com.taskie.db.FlatDao;
 import com.taskie.db.TaskDao;
@@ -24,6 +25,7 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<TaskieConfiguration> bootstrap) {
+        bootstrap.addBundle(new CorsBundle<>());
         bootstrap.addBundle(new SwaggerBundle<TaskieConfiguration>() {
             @Override
             protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(final TaskieConfiguration configuration) {

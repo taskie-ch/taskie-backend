@@ -17,6 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dw.version>1.3.1</dw.version>
         <dw.swagger.version>1.3.0-1</dw.swagger.version>
+        <dw.cors.version>0.2.0</dw.cors.version>
         <mainClass>com.taskie.TaskieApplication</mainClass>
     </properties>
 
@@ -34,6 +35,11 @@
                 <groupId>com.smoketurner</groupId>
                 <artifactId>dropwizard-swagger</artifactId>
                 <version>${dw.swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.grimoire.dropwizard.cors</groupId>
+                <artifactId>dropwizard-simple-cors</artifactId>
+                <version>${dw.cors.version}</version>
             </dependency>
 
         </dependencies>
@@ -59,6 +65,10 @@
         <dependency>
             <groupId>com.smoketurner</groupId>
             <artifactId>dropwizard-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ca.grimoire.dropwizard.cors</groupId>
+            <artifactId>dropwizard-simple-cors</artifactId>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
@@ -176,6 +186,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
 
     <reporting>
         <plugins>

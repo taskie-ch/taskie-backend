@@ -12,18 +12,18 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
+import static com.taskie.resources.ResourcePath.FLATS;
+import static com.taskie.resources.ResourcePath.FLAT_ID;
+import static com.taskie.resources.ResourcePath.LOGIN;
 import static java.util.Objects.requireNonNull;
 
-@Path("/flats")
+@Path(FLATS)
 @Api(value = "auth")
 @Produces(MediaType.APPLICATION_JSON)
 public class LoginResource {
@@ -39,9 +39,9 @@ public class LoginResource {
     @POST
     @Timed
     @PermitAll
-    @Path("/{flatId}/auth")
+    @Path(LOGIN)
     @ApiOperation(value = "Authenticate with the service")
-    public User authenticate(@PathParam("flatId") LongParam flatId, @Context SecurityContext context) {
+    public User authenticate(@PathParam(FLAT_ID) LongParam flatId, @Context SecurityContext context) {
         final String name = requireAuthenticated(context.getUserPrincipal()).getName();
         LOG.info("{} requested login for flat {}", name, flatId);
         return userDao.findByName(name).deriveUser();

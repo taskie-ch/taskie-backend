@@ -15,11 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Requests {@link TaskResource#getTasks()}
+ * Requests {@link TaskResource#getTasks}
  */
 public class GetAllTasksTest extends AbstractRequestTest {
 
-    private static final String PATH = "/tasks";
+    private static final String PATH = "/flats/1/tasks";
     private static final TaskDao DAO = mock(TaskDao.class);
     private static final TaskInfo TASK_INFO = TestData.TASK_INFO;
 

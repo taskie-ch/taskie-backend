@@ -3,7 +3,6 @@ package com.taskie.resources;
 import com.taskie.api.Id;
 import com.taskie.db.TaskDao;
 import com.taskie.util.TestData;
-import io.dropwizard.jersey.params.LongParam;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,12 +13,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
- * Requests {@link TaskResource#uncompleteTask(LongParam)}
+ * Requests {@link TaskResource#uncompleteTask}
  */
 public class UncompleteTaskTest extends AbstractRequestTest {
 
     private static final Id ID = TestData.TASK.deriveId();
-    private static final String PATH = "/tasks/" + ID.getId() + "/uncomplete";
+    private static final String PATH = "flats/1/tasks/" + ID.getId() + "/uncomplete";
     private static final TaskDao DAO = mock(TaskDao.class);
 
     public UncompleteTaskTest() {

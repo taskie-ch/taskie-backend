@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Requests {@link TaskResource#createTask(TaskCreate)}
+ * Requests {@link TaskResource#createTask}
  */
 public class CreateTaskTest extends AbstractRequestTest {
 
-    private static final String PATH = "/tasks";
+    private static final String PATH = "/flats/1/tasks";
 
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
     private static final TaskDao DAO = mock(TaskDao.class);

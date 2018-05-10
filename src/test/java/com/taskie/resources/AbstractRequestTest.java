@@ -14,6 +14,7 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.junit.Rule;
 
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -49,6 +50,13 @@ public abstract class AbstractRequestTest {
      */
     Invocation.Builder request() {
         return resources.target(path).request();
+    }
+
+    /**
+     * @return response builder
+     */
+    WebTarget target() {
+        return resources.target(path);
     }
 
     /**

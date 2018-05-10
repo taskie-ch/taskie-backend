@@ -1,9 +1,9 @@
 package com.taskie.auth;
 
-import com.taskie.core.User;
+import com.taskie.core.UserPrincipal;
 import io.dropwizard.auth.Authorizer;
 
-public class SimpleAuthorizer implements Authorizer<User> {
+public class SimpleAuthorizer implements Authorizer<UserPrincipal> {
 
     /**
      * Authorizes a user to perform an action based on roles.
@@ -13,7 +13,7 @@ public class SimpleAuthorizer implements Authorizer<User> {
      * @return {@code true} if the user is authorized
      */
     @Override
-    public boolean authorize(User user, String role) {
+    public boolean authorize(UserPrincipal user, String role) {
         // authorizes all user for all actions
         return true;
     }

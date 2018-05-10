@@ -9,19 +9,25 @@ import com.taskie.db.TaskDao;
 import io.dropwizard.jersey.params.LongParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import static com.taskie.resources.ResourcePath.*;
+
 /**
  * Resource for task access and manipulation.
  */
-@Path("/tasks")
+@Path(FLATS)
 @Api(value = "tasks")
 @Produces(MediaType.APPLICATION_JSON)
 public class TaskResource {
+
+    private final Logger LOG = LoggerFactory.getLogger(LoginResource.class);
 
     private final TaskDao taskDao;
 
@@ -31,8 +37,9 @@ public class TaskResource {
 
     @GET
     @Timed
+    @Path(TASKS)
     @ApiOperation(value = "Get all tasks")
-    public Collection<TaskInfo> getTasks() {
+    public Collection<TaskInfo> getTasks(@PathParam(FLAT_ID) LongParam flatId) {
         return taskDao.findAll().stream()
                 .map(Task::deriveInfo)
                 .collect(Collectors.toList());
@@ -40,41 +47,43 @@ public class TaskResource {
 
     @POST
     @Timed
+    @Path(TASKS)
     @ApiOperation(value = "Create a new task")
-    public Id createTask(TaskCreate taskCreate) {
+    public Id createTask(@PathParam(FLAT_ID) LongParam flatId, TaskCreate taskCreate) {
         return taskDao.save(taskCreate).deriveId();
     }
 
     @GET
     @Timed
-    @Path("/{taskId}")
+    @Path(TASK)
     @ApiOperation(value = "Get tasks by id")
-    public TaskInfo getTask(@PathParam("taskId") LongParam id) {
+    public TaskInfo getTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
         return taskDao.findById(id.get()).deriveInfo();
     }
 
 
     @DELETE
     @Timed
-    @Path("/{taskId}")
+    @Path(TASK)
     @ApiOperation(value = "Delete tasks by id")
-    public Id deleteTask(@PathParam("taskId") LongParam id) {
+    public Id deleteTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
         return taskDao.delete(id.get()).deriveId();
     }
 
     @POST
     @Timed
-    @Path("/{taskId}/complete")
+    @Path(TASK_COMPLETE)
     @ApiOperation(value = "Completes a task by id")
-    public void completeTask(@PathParam("taskId") LongParam id) {
+    public void completeTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
+        LOG.info("Complete task for flat:{}, task:{}", id.get());
         taskDao.complete(id.get());
     }
 
     @POST
     @Timed
-    @Path("/{taskId}/uncomplete")
+    @Path(TASK_UNCOMPLETE)
     @ApiOperation(value = "Uncompletes a task by id")
-    public void uncompleteTask(@PathParam("taskId") LongParam id) {
+    public void uncompleteTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
         taskDao.uncomplete(id.get());
     }
 }

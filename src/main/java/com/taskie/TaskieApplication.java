@@ -3,10 +3,11 @@ package com.taskie;
 import com.taskie.auth.AuthConfiguration;
 import com.taskie.db.FlatDao;
 import com.taskie.db.TaskDao;
+import com.taskie.db.UserDao;
 import com.taskie.health.FlatServiceHealthCheck;
 import com.taskie.health.TaskServiceHealthCheck;
+import com.taskie.resources.LoginResource;
 import com.taskie.resources.TaskResource;
-import com.taskie.resources.TaskScheduleResource;
 import com.taskie.resources.error.IllegalArgumentExceptionMapper;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -38,6 +39,7 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
         configureExceptionMappers(env);
 
+        UserDao userDao = new UserDao();
         FlatDao flatDao = new FlatDao();
         TaskDao taskDao = new TaskDao(flatDao);
 
@@ -45,7 +47,7 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskDao));
 
         env.jersey().register(new TaskResource(taskDao));
-        env.jersey().register(new TaskScheduleResource(taskDao));
+        env.jersey().register(new LoginResource(userDao));
     }
 
     private static void configureExceptionMappers(Environment env) {

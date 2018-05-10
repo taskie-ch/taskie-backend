@@ -13,34 +13,34 @@ import java.util.function.Predicate;
  */
 public class Rotation {
 
-    private final Map<DateTime, User> rotation;
+    private final Map<DateTime, UserPrincipal> rotation;
 
-    private Rotation(Map<DateTime, User> rotation) {
+    private Rotation(Map<DateTime, UserPrincipal> rotation) {
         this.rotation = rotation;
     }
 
-    public Map<DateTime, User> getRotation() {
+    public Map<DateTime, UserPrincipal> getRotation() {
         return rotation;
     }
 
-    public User getCurrent() {
+    public UserPrincipal getCurrent() {
         return get(dateTime -> dateTime.isBefore(DateTime.now()));
     }
 
-    public User getNext() {
+    public UserPrincipal getNext() {
         return get(dateTime -> dateTime.isAfter(DateTime.now()));
     }
 
-    private User get(Predicate<DateTime> predicate) {
+    private UserPrincipal get(Predicate<DateTime> predicate) {
 
-//        Set<User> result = rotation.entrySet().stream()
+//        Set<UserPrincipal> result = rotation.entrySet().stream()
 //                .filter(entry -> predicate.test(entry.getKey()))
 //                .map(Map.Entry::getValue)
 //                .collect(Collectors.toSet());
 
 
-        User user = User.NONE;
-        for (Map.Entry<DateTime, User> entry : rotation.entrySet()) {
+        UserPrincipal user = UserPrincipal.NONE;
+        for (Map.Entry<DateTime, UserPrincipal> entry : rotation.entrySet()) {
             if (predicate.test(entry.getKey())) {
                 user = entry.getValue();
                 break;
@@ -62,13 +62,13 @@ public class Rotation {
 
     public static class Builder {
 
-        private final Map<DateTime, User> rotation = new TreeMap<>(DateTimeComparator.getInstance());
+        private final Map<DateTime, UserPrincipal> rotation = new TreeMap<>(DateTimeComparator.getInstance());
 
         private Builder() {
             // private constructor
         }
 
-        public Builder addRotation(DateTime start, User user) {
+        public Builder addRotation(DateTime start, UserPrincipal user) {
             rotation.put(start, user);
             return this;
         }

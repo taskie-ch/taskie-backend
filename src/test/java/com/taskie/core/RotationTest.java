@@ -10,9 +10,9 @@ public class RotationTest {
     @Test
     public void getCurrentUserOnRota() {
 
-        User john = new User("John Doe");
-        User jim = new User("Jim Beam");
-        User jack = new User("Jack Black");
+        UserPrincipal john = new UserPrincipal("John Doe");
+        UserPrincipal jim = new UserPrincipal("Jim Beam");
+        UserPrincipal jack = new UserPrincipal("Jack Black");
 
         Rotation rota = Rotation.newBuilder()
                 .addRotation(DateTime.now().minusDays(1), john)
@@ -27,26 +27,26 @@ public class RotationTest {
     @Test
     public void getNextUserDoesNotYieldResult() {
 
-        User john = new User("John Doe");
+        UserPrincipal john = new UserPrincipal("John Doe");
 
         Rotation rota = Rotation.newBuilder()
                 .addRotation(DateTime.now().minusDays(1), john)
                 .build();
 
         assertEquals("Current user", john, rota.getCurrent());
-        assertEquals("Next user", User.NONE, rota.getNext());
+        assertEquals("Next user", UserPrincipal.NONE, rota.getNext());
     }
 
     @Test
     public void getCurrentUserDoesNotYieldResult() {
 
-        User john = new User("John Doe");
+        UserPrincipal john = new UserPrincipal("John Doe");
 
         Rotation rota = Rotation.newBuilder()
                 .addRotation(DateTime.now().plusDays(1), john)
                 .build();
 
-        assertEquals("Current user", User.NONE, rota.getCurrent());
+        assertEquals("Current user", UserPrincipal.NONE, rota.getCurrent());
         assertEquals("Next user", john, rota.getNext());
     }
 }

@@ -44,7 +44,7 @@ public class Task {
     private List<String> getRotationNames() {
         return occurences.stream()
                 .map(TaskOccurence::getAssignee)
-                .map(User::getName)
+                .map(UserPrincipal::getName)
                 .collect(Collectors.toList());
     }
 

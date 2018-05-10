@@ -5,10 +5,10 @@ import org.joda.time.DateTime;
 public class TaskOccurence {
 
     private final DateTime date;
-    private final User assignee;
+    private final UserPrincipal assignee;
     private boolean done = false;
 
-    public TaskOccurence(DateTime date, User assignee) {
+    public TaskOccurence(DateTime date, UserPrincipal assignee) {
         this.date = date;
         this.assignee = assignee;
     }
@@ -33,7 +33,7 @@ public class TaskOccurence {
         return !done;
     }
 
-    public User getAssignee() {
+    public UserPrincipal getAssignee() {
         return assignee;
     }
 }

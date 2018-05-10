@@ -10,10 +10,7 @@ public class FlatDao {
 
     private final Map<Long, Flat> flats = new HashMap<>();
 
-    private final UserDao userDao;
-
     public FlatDao(UserDao userDao) {
-        this.userDao = userDao;
         Set<UserPrincipal> users = new HashSet<>(3);
         users.add(userDao.findByName("Tom"));
         users.add(userDao.findByName("Jane"));

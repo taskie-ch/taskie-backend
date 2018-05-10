@@ -8,6 +8,6 @@ import com.taskie.util.TestData;
 public class TaskInfoTest extends AbstractSerializationTest<TaskInfo> {
 
     public TaskInfoTest() {
-        super(TestData.TASK_INFO);
+        super(TestData.taskInfo());
     }
 }

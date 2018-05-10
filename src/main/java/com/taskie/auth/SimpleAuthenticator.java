@@ -11,7 +11,7 @@ public class SimpleAuthenticator implements Authenticator<BasicCredentials, User
     @Override
     public Optional<UserPrincipal> authenticate(BasicCredentials credentials) {
         if ("secret".equals(credentials.getPassword())) {
-            return Optional.of(new UserPrincipal(credentials.getUsername()));
+            return Optional.of(new UserPrincipal("x", credentials.getUsername()));
         }
         return Optional.empty();
     }

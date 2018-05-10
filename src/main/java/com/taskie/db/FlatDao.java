@@ -8,17 +8,20 @@ import java.util.*;
 
 public class FlatDao {
 
-    private static final Map<Long, Flat> FLATS = new HashMap<>();
+    private final Map<Long, Flat> flats = new HashMap<>();
 
-    static {
+    private final UserDao userDao;
+
+    public FlatDao(UserDao userDao) {
+        this.userDao = userDao;
         Set<UserPrincipal> users = new HashSet<>(3);
-        users.add(new UserPrincipal("Tom"));
-        users.add(new UserPrincipal("Jane"));
-        users.add(new UserPrincipal("Joe"));
-        FLATS.put(1L, new Flat(1, "Taskie Home", users, new HallOfFame(Collections.emptyMap())));
+        users.add(userDao.findByName("Tom"));
+        users.add(userDao.findByName("Jane"));
+        users.add(userDao.findByName("Joe"));
+        flats.put(1L, new Flat(1, "Taskie Home", users, new HallOfFame(Collections.emptyMap())));
     }
 
     public Flat findById(long id) {
-        return FLATS.get(id);
+        return flats.get(id);
     }
 }

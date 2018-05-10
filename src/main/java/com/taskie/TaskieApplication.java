@@ -6,6 +6,7 @@ import com.taskie.db.TaskDao;
 import com.taskie.db.UserDao;
 import com.taskie.health.FlatServiceHealthCheck;
 import com.taskie.health.TaskServiceHealthCheck;
+import com.taskie.resources.HallOfFameResource;
 import com.taskie.resources.LoginResource;
 import com.taskie.resources.TaskResource;
 import com.taskie.resources.error.IllegalArgumentExceptionMapper;
@@ -40,13 +41,14 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         configureExceptionMappers(env);
 
         UserDao userDao = new UserDao();
-        FlatDao flatDao = new FlatDao();
-        TaskDao taskDao = new TaskDao(flatDao);
+        FlatDao flatDao = new FlatDao(userDao);
+        TaskDao taskDao = new TaskDao(flatDao, userDao);
 
         env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatDao));
         env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskDao));
 
         env.jersey().register(new TaskResource(taskDao));
+        env.jersey().register(new HallOfFameResource(flatDao));
         env.jersey().register(new LoginResource(userDao));
     }
 

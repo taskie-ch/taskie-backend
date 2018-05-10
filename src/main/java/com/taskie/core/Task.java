@@ -41,10 +41,10 @@ public class Task {
                 .findFirst().ifPresent(TaskOccurence::uncomplete);
     }
 
-    private List<String> getRotationNames() {
+    private List<String> getRotationUserIds() {
         return occurences.stream()
                 .map(TaskOccurence::getAssignee)
-                .map(UserPrincipal::getName)
+                .map(UserPrincipal::getId)
                 .collect(Collectors.toList());
     }
 
@@ -54,8 +54,8 @@ public class Task {
 
     public TaskInfo deriveInfo() {
         TaskOccurence occurence = occurences.get(0);
-        return new TaskInfo(id, title, frequency.toString(), occurence.getDate().toString(),
-                effort.getValue(), occurence.isDone(), getRotationNames());
+        return new TaskInfo(id, title, frequency.name(), occurence.getDate().toString(),
+                effort.getValue(), getRotationUserIds());
     }
 
     public TaskCreate deriveCreate() {

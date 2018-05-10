@@ -7,12 +7,13 @@ import static org.junit.Assert.assertEquals;
 
 public class RotationTest {
 
+    private final UserPrincipal john = new UserPrincipal("x", "John Doe");
+    private final UserPrincipal jim = new UserPrincipal("y", "Jim Beam");
+    private final UserPrincipal jack = new UserPrincipal("z", "Jack Black");
+
     @Test
     public void getCurrentUserOnRota() {
 
-        UserPrincipal john = new UserPrincipal("John Doe");
-        UserPrincipal jim = new UserPrincipal("Jim Beam");
-        UserPrincipal jack = new UserPrincipal("Jack Black");
 
         Rotation rota = Rotation.newBuilder()
                 .addRotation(DateTime.now().minusDays(1), john)
@@ -27,8 +28,6 @@ public class RotationTest {
     @Test
     public void getNextUserDoesNotYieldResult() {
 
-        UserPrincipal john = new UserPrincipal("John Doe");
-
         Rotation rota = Rotation.newBuilder()
                 .addRotation(DateTime.now().minusDays(1), john)
                 .build();
@@ -39,8 +38,6 @@ public class RotationTest {
 
     @Test
     public void getCurrentUserDoesNotYieldResult() {
-
-        UserPrincipal john = new UserPrincipal("John Doe");
 
         Rotation rota = Rotation.newBuilder()
                 .addRotation(DateTime.now().plusDays(1), john)

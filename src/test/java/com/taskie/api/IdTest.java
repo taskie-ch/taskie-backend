@@ -8,6 +8,6 @@ import com.taskie.util.TestData;
 public class IdTest extends AbstractSerializationTest<Id> {
 
     public IdTest() {
-        super(TestData.TASK.deriveId());
+        super(TestData.id());
     }
 }

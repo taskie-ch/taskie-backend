@@ -9,6 +9,7 @@ public class ResourcePathTest {
     @Test
     public void verifyResourcePaths() {
         assertThat(ResourcePath.FLATS).isEqualTo("/flats");
+        assertThat(ResourcePath.HALL_OF_FAME).isEqualTo("/{flatId}/hof");
         assertThat(ResourcePath.LOGIN).isEqualTo("/{flatId}/auth");
         assertThat(ResourcePath.TASKS).isEqualTo("/{flatId}/tasks");
         assertThat(ResourcePath.TASK).isEqualTo("/{flatId}/tasks/{taskId}");

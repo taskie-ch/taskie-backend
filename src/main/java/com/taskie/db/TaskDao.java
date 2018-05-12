@@ -80,10 +80,6 @@ public class TaskDao {
         findById(flatId, taskId).markTaskAsDone();
     }
 
-    public void uncomplete(long flatId, long taskId) {
-        throw new UnsupportedOperationException("Do we need thos?");
-    }
-
     public void skip(long flatId, long taskId) {
         findById(flatId, taskId).skipTask();
     }

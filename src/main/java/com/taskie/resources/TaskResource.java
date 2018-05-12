@@ -89,14 +89,6 @@ public class TaskResource {
     @POST
     @Timed
     @Path(TASK_UNCOMPLETE)
-    @ApiOperation(value = "Uncompletes a task by id")
-    public void uncompleteTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
-        taskDao.uncomplete(flatId.get(), id.get());
-    }
-
-    @POST
-    @Timed
-    @Path(TASK_SKIP)
     @ApiOperation(value = "Skips a task by id")
     public void skipTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
         taskDao.skip(flatId.get(), id.get());

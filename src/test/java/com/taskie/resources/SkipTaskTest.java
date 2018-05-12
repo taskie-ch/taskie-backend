@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class SkipTaskTest extends AbstractRequestTest {
 
     private static final Id ID = TestData.TASK.deriveId();
-    private static final String PATH = "flats/1/tasks/" + ID.getId() + "/skip";
+    private static final String PATH = "flats/1/tasks/" + ID.getId() + "/uncomplete";
     private static final TaskDao DAO = mock(TaskDao.class);
 
     public SkipTaskTest() {

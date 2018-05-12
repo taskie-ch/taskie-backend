@@ -4,8 +4,6 @@ import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
@@ -13,8 +11,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 public class Task {
-
-    private final Logger LOG = LoggerFactory.getLogger(Task.class);
 
     private final long id;
     private final String title;
@@ -54,10 +50,6 @@ public class Task {
 
     private void updateRotation() {
         rotation.update();
-    }
-
-    private void rollbackRotation() {
-        rotation.rollback();
     }
 
     public Id deriveId() {

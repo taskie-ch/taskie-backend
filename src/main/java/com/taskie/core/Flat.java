@@ -9,14 +9,14 @@ public class Flat {
 
     private final long id;
     private final String name;
-    private final Set<Flatmate> users;
+    private final Map<String, Flatmate> users;
     private final Map<Long, Task> tasks;
     private final HallOfFame hallOfFame;
 
     public Flat(long id, String name) {
         this.id = id;
         this.name = name;
-        this.users = new HashSet<>();
+        this.users = new ConcurrentHashMap<>();
         this.tasks = new ConcurrentHashMap<>();
         this.hallOfFame = new HallOfFame(new HashMap<>());
     }
@@ -34,7 +34,7 @@ public class Flat {
     }
 
     public Set<Flatmate> getUsers() {
-        return users;
+        return new HashSet<>(users.values());
     }
 
     public HallOfFame getHallOfFame() {
@@ -42,16 +42,15 @@ public class Flat {
     }
 
     public void addFlatmate(Flatmate user) {
-        this.users.add(user);
+        this.users.put(user.getId(), user);
     }
 
     public void addAllFlatmates(Collection<Flatmate> users) {
-        this.users.addAll(users);
+        users.forEach(user -> this.users.put(user.getId(), user));
     }
 
-
     public void removeFlatmate(String id) {
-
+        users.remove(id);
     }
 
     public void addTask(Task task) {
@@ -63,7 +62,7 @@ public class Flat {
     }
 
     public Optional<Flatmate> findUser(String name) {
-        return users.stream()
+        return users.values().stream()
                 .filter(user -> user.getName().equals(name))
                 .reduce((first, next) -> first);
     }

@@ -14,5 +14,4 @@ class ResourcePath {
     static final String TASK = TASKS + "/{" + TASK_ID + "}";
     static final String TASK_COMPLETE = TASK + "/complete";
     static final String TASK_UNCOMPLETE = TASK + "/uncomplete";
-    static final String TASK_SKIP = TASK + "/skip";
 }

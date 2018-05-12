@@ -45,6 +45,10 @@ public class Flatmate {
         return principal.getName();
     }
 
+    public Email getEmail() {
+        return email;
+    }
+
     public User deriveUser() {
         return new User(principal.getId(), principal.getName(), score.getPoints());
     }

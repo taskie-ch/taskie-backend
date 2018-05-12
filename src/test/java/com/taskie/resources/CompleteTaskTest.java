@@ -1,6 +1,6 @@
 package com.taskie.resources;
 
-import com.taskie.api.Id;
+import com.taskie.api.UserId;
 import com.taskie.db.TaskDao;
 import com.taskie.util.TestData;
 import org.junit.Test;
@@ -17,8 +17,8 @@ import static org.mockito.Mockito.verify;
  */
 public class CompleteTaskTest extends AbstractRequestTest {
 
-    private static final Id ID = TestData.TASK.deriveId();
-    private static final String PATH = ResourcePaths.withBaseAndIds(ResourcePath.TASK_COMPLETE, 1, ID.getId());
+    private static final UserId ID = TestData.userId();
+    private static final String PATH = ResourcePaths.withBaseAndIds(ResourcePath.TASK_COMPLETE, 1, 1);
     private static final TaskDao DAO = mock(TaskDao.class);
 
     public CompleteTaskTest() {
@@ -27,14 +27,14 @@ public class CompleteTaskTest extends AbstractRequestTest {
 
     @Test
     public void requestCompleteTask() {
-        assertThat(request().post(Entity.json(ID.getId())).getStatus())
+        assertThat(request().post(Entity.json(ID)).getStatus())
                 .isEqualTo(HttpServletResponse.SC_NO_CONTENT);
-        verify(DAO).complete(1, ID.getId());
+        verify(DAO).complete(1, 1, ID.getUserId());
     }
 
     @Test
     public void requestCompleteTaskWithWrongMethod() {
         assertThat(request().get().getStatus()).isEqualTo(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-        verify(DAO).complete(1, ID.getId());
+        verify(DAO).complete(1, 1, ID.getUserId());
     }
 }

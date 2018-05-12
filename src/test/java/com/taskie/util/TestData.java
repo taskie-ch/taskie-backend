@@ -3,6 +3,7 @@ package com.taskie.util;
 import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
+import com.taskie.api.UserId;
 import com.taskie.core.*;
 import org.joda.time.DateTime;
 
@@ -16,6 +17,8 @@ public final class TestData {
 
 
     private static final UserPrincipal USER_PRINCIPAL = new UserPrincipal("id_joe", "Joe");
+
+    private static final UserId USER_ID = new UserId("id_joe");
 
     private static final Flatmate FLATMATE = Flatmate.create(USER_PRINCIPAL,
             new Email("a@b.c"),
@@ -53,6 +56,10 @@ public final class TestData {
 
     public static Flatmate flatmate() {
         return FLATMATE;
+    }
+
+    public static UserId userId() {
+        return USER_ID;
     }
 
     public static UserPrincipal userPrincipal() {

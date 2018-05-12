@@ -29,19 +29,24 @@ public class Task {
         this.rotation = rotation;
     }
 
-    public void markTaskAsDone() {
-        rewardEffort();
+    public void markTaskAsDone(String userId) {
+        rewardEffort(userId);
         updateRotation();
         updateDueDate();
     }
 
-    public void skipTask() {
+    public void skipTask(String userId) {
+        fineEffort(userId);
         updateRotation();
         updateDueDate();
     }
 
-    private void rewardEffort() {
-        rotation.currentUser().incrementScore(effort.getValue());
+    private void rewardEffort(String userId) {
+        rotation.applyToUser(userId, user -> user.incrementScore(effort.getValue()));
+    }
+
+    private void fineEffort(String userId) {
+        rotation.applyToUser(userId, user -> user.decrementScore(effort.getValue()));
     }
 
     private void updateDueDate() {

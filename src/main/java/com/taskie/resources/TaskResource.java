@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
+import com.taskie.api.UserId;
 import com.taskie.core.Task;
 import com.taskie.db.TaskDao;
 import io.dropwizard.jersey.params.LongParam;
@@ -81,16 +82,16 @@ public class TaskResource {
     @Timed
     @Path(TASK_COMPLETE)
     @ApiOperation(value = "Completes a task by id")
-    public void completeTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
+    public void completeTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id, UserId userId) {
         LOG.info("Complete task for flat:{}, task:{}", id.get(), id.get());
-        taskDao.complete(flatId.get(), id.get());
+        taskDao.complete(flatId.get(), id.get(), userId.getUserId());
     }
 
     @POST
     @Timed
     @Path(TASK_UNCOMPLETE)
     @ApiOperation(value = "Skips a task by id")
-    public void skipTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id) {
-        taskDao.skip(flatId.get(), id.get());
+    public void skipTask(@PathParam(FLAT_ID) LongParam flatId, @PathParam(TASK_ID) LongParam id, UserId userId) {
+        taskDao.skip(flatId.get(), id.get(), userId.getUserId());
     }
 }

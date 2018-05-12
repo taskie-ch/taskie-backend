@@ -4,48 +4,60 @@ import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 public class Task {
 
+    private final Logger LOG = LoggerFactory.getLogger(Task.class);
+
     private final long id;
     private final String title;
     private final Effort effort;
     private final Frequency frequency;
-    private final DateTime startDate;
-    private final List<TaskOccurence> occurences;
+    private final DueDate start;
+    private final Rotation rotation;
 
     private Task(long id, String title, Effort effort, Frequency frequency,
-                 DateTime startDate, List<TaskOccurence> occurences) {
+                 DueDate start, Rotation rotation) {
         this.id = id;
         this.title = title;
         this.effort = effort;
         this.frequency = frequency;
-        this.startDate = startDate;
-        this.occurences = occurences;
+        this.start = start;
+        this.rotation = rotation;
     }
 
-    public void complete() {
-        occurences.stream().filter(TaskOccurence::isPending)
-                .findFirst().ifPresent(TaskOccurence::complete);
+    public void markTaskAsDone() {
+        rewardEffort();
+        updateRotation();
+        updateDueDate();
     }
 
-    public void uncomplete() {
-        occurences.stream().filter(TaskOccurence::isDone)
-                .findFirst().ifPresent(TaskOccurence::uncomplete);
+    public void skipTask() {
+        updateRotation();
+        updateDueDate();
     }
 
-    private List<String> getRotationUserIds() {
-        return occurences.stream()
-                .map(TaskOccurence::getAssignee)
-                .map(UserPrincipal::getId)
-                .collect(Collectors.toList());
+    private void rewardEffort() {
+        rotation.currentUser().incrementScore(effort.getValue());
+    }
+
+    private void updateDueDate() {
+        start.update(frequency);
+    }
+
+    private void updateRotation() {
+        rotation.update();
+    }
+
+    private void rollbackRotation() {
+        rotation.rollback();
     }
 
     public Id deriveId() {
@@ -53,13 +65,12 @@ public class Task {
     }
 
     public TaskInfo deriveInfo() {
-        TaskOccurence occurence = occurences.get(0);
-        return new TaskInfo(id, title, frequency.name(), occurence.getDate().toString(),
-                effort.getValue(), getRotationUserIds());
+        return new TaskInfo(id, title, frequency.name(), start.toString(),
+                effort.getValue(), rotation.getRotationUserIds());
     }
 
     public TaskCreate deriveCreate() {
-        return new TaskCreate(title, frequency.toString(), occurences.get(0).getDate().toString(), effort.getValue());
+        return new TaskCreate(title, frequency.toString(), start.toString(), effort.getValue(), rotation.getRotationUserIds());
     }
 
     public long getId() {
@@ -78,12 +89,12 @@ public class Task {
         return frequency;
     }
 
-    public DateTime getStartDate() {
-        return startDate;
+    public DueDate getStart() {
+        return start;
     }
 
-    public List<TaskOccurence> getOccurences() {
-        return occurences;
+    public Rotation getRotation() {
+        return rotation;
     }
 
     public static Builder newBuilder() {
@@ -104,8 +115,8 @@ public class Task {
         private String title;
         private Effort effort;
         private Frequency frequency;
-        private DateTime startDate;
-        private List<TaskOccurence> occurences = new ArrayList<>();
+        private DueDate startDate;
+        private Rotation rotation;
 
         private Builder() {
             // default private constructor
@@ -116,11 +127,11 @@ public class Task {
             setTitle(task.getTitle());
             setEffort(task.getEffort());
             setFrequency(task.getFrequency());
-            setStartDate(task.getStartDate());
-            addOccurences(task.getOccurences());
+            setStartDate(task.getStart());
+            setRotation(task.getRotation());
         }
 
-        public Builder(TaskCreate taskCreate) {
+        private Builder(TaskCreate taskCreate) {
             setTitle(taskCreate.getTitle());
             setFrequency(Frequency.valueOf(taskCreate.getFrequency().toUpperCase()));
             setEffort(Effort.valueOf(taskCreate.getEffort()));
@@ -148,20 +159,26 @@ public class Task {
         }
 
         public Builder setStartDate(DateTime startDate) {
+            return setStartDate(new DueDate(startDate));
+
+        }
+
+        public Builder setStartDate(DueDate startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public Builder addOccurences(List<TaskOccurence> occurences) {
-            occurences.forEach(this::addOccurence);
+        public Builder setRotation(Rotation rotation) {
+            this.rotation = rotation;
             return this;
         }
 
-        public Builder addOccurence(TaskOccurence occurence) {
-            requireNonNull(occurence, "Task occurence is required");
-            occurences.add(occurence);
-            return this;
+        public Builder setRotation(Collection<Flatmate> rotation) {
+            Rotation rota = new Rotation();
+            rota.addAll(rotation);
+            return setRotation(rota);
         }
+
 
         public Task build() {
             checkState(id >= 0, "Id is required");
@@ -169,7 +186,7 @@ public class Task {
             requireNonNull(effort, "Effort is required");
             requireNonNull(frequency, "Frequency is required");
             requireNonNull(startDate, "Start date is required");
-            return new Task(id, title, effort, frequency, startDate, occurences);
+            return new Task(id, title, effort, frequency, startDate, rotation);
         }
     }
 }

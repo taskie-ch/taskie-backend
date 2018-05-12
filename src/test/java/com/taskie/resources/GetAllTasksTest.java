@@ -36,15 +36,15 @@ public class GetAllTasksTest extends AbstractRequestTest {
     public void requestAllTask() {
         final Task task = mock(Task.class);
         when(task.deriveInfo()).thenReturn(TASK_INFO);
-        when(DAO.findAll()).thenReturn(Collections.singletonList(task));
+        when(DAO.findAll(1)).thenReturn(Collections.singletonList(task));
         assertThat(request().get(taskInfoList())).containsExactly(TASK_INFO);
-        verify(DAO).findAll();
+        verify(DAO).findAll(1);
     }
 
     @Test
     public void requestAllTaskThrowsException() {
-        when(DAO.findAll()).thenThrow(IllegalArgumentException.class);
+        when(DAO.findAll(1)).thenThrow(IllegalArgumentException.class);
         assertThat(request().get().getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
-        verify(DAO).findAll();
+        verify(DAO).findAll(1);
     }
 }

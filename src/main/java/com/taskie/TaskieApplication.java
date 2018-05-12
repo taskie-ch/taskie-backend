@@ -51,7 +51,7 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
         env.jersey().register(new TaskResource(taskDao));
         env.jersey().register(new HallOfFameResource(flatDao));
-        env.jersey().register(new LoginResource(userDao));
+        env.jersey().register(new LoginResource(flatDao));
     }
 
     private static void configureExceptionMappers(Environment env) {

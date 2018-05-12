@@ -28,12 +28,12 @@ public class GetTaskTest extends AbstractRequestTest {
     public void setUp() {
         final Task task = mock(Task.class);
         when(task.deriveInfo()).thenReturn(TASK_INFO);
-        when(DAO.findById(ID)).thenReturn(task);
+        when(DAO.findById(ID, ID)).thenReturn(task);
     }
 
     @Test
     public void requestTask() {
         assertThat(request().get(TaskInfo.class)).isEqualTo(TASK_INFO);
-        verify(DAO).findById(ID);
+        verify(DAO).findById(ID, ID);
     }
 }

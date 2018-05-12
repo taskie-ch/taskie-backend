@@ -1,83 +1,46 @@
 package com.taskie.core;
 
-import com.google.common.base.MoreObjects;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Predicate;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.stream.Collectors;
 
 /**
  * Rotation sequence set for individual tasks
  */
 public class Rotation {
 
-    private final Map<DateTime, UserPrincipal> rotation;
+    private final Logger LOG = LoggerFactory.getLogger(Rotation.class);
 
-    private Rotation(Map<DateTime, UserPrincipal> rotation) {
-        this.rotation = rotation;
+    private Queue<Flatmate> rotation = new LinkedList<>();
+
+    public void addAll(Collection<Flatmate> users) {
+        rotation.addAll(users);
     }
 
-    public Map<DateTime, UserPrincipal> getRotation() {
-        return rotation;
+    public Flatmate currentUser() {
+        return rotation.peek();
     }
 
-    public UserPrincipal getCurrent() {
-        return get(dateTime -> dateTime.isBefore(DateTime.now()));
+    public void update() {
+        Flatmate current = rotation.remove();
+        LOG.info("Rotating {} to the end", current);
+        rotation.add(current);
+
+        // TODO skip if user is absent
     }
 
-    public UserPrincipal getNext() {
-        return get(dateTime -> dateTime.isAfter(DateTime.now()));
+    public void rollback() {
+        // TODO do we need this even?
     }
 
-    private UserPrincipal get(Predicate<DateTime> predicate) {
-
-//        Set<UserPrincipal> result = rotation.entrySet().stream()
-//                .filter(entry -> predicate.test(entry.getKey()))
-//                .map(Map.Entry::getValue)
-//                .collect(Collectors.toSet());
-
-
-        UserPrincipal user = UserPrincipal.NONE;
-        for (Map.Entry<DateTime, UserPrincipal> entry : rotation.entrySet()) {
-            if (predicate.test(entry.getKey())) {
-                user = entry.getValue();
-                break;
-            }
-        }
-        return user;
-    }
-
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("rotation", rotation)
-                .toString();
-    }
-
-    public static class Builder {
-
-        private final Map<DateTime, UserPrincipal> rotation = new TreeMap<>(DateTimeComparator.getInstance());
-
-        private Builder() {
-            // private constructor
-        }
-
-        public Builder addRotation(DateTime start, UserPrincipal user) {
-            rotation.put(start, user);
-            return this;
-        }
-
-        public Rotation build() {
-            if (rotation.size() < 1) {
-                throw new IllegalStateException("Need to add at least one user to the rotation");
-            }
-            return new Rotation(rotation);
-        }
+    List<String> getRotationUserIds() {
+        return rotation.stream()
+                .map(Flatmate::getId)
+                .collect(Collectors.toList());
     }
 }

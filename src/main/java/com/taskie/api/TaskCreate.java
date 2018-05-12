@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 
+import java.util.List;
 import java.util.Objects;
 
 public class TaskCreate {
@@ -12,16 +13,19 @@ public class TaskCreate {
     private final String frequency;
     private final String start;
     private final int effort;
+    private final List<String> userIds;
 
     @JsonCreator
     public TaskCreate(@JsonProperty("title") String title,
                       @JsonProperty("frequency") String frequency,
                       @JsonProperty("start") String start,
-                      @JsonProperty("effort") int effort) {
+                      @JsonProperty("effort") int effort,
+                      @JsonProperty("usersRotation") List<String> userIds) {
         this.title = title;
         this.frequency = frequency;
         this.start = start;
         this.effort = effort;
+        this.userIds = userIds;
     }
 
     @JsonProperty("title")
@@ -44,6 +48,11 @@ public class TaskCreate {
         return effort;
     }
 
+    @JsonProperty("usersRotation")
+    public List<String> getUserIds() {
+        return userIds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,12 +61,13 @@ public class TaskCreate {
         return effort == that.effort &&
                 Objects.equals(title, that.title) &&
                 Objects.equals(frequency, that.frequency) &&
-                Objects.equals(start, that.start);
+                Objects.equals(start, that.start) &&
+                Objects.equals(userIds, that.userIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, frequency, start, effort);
+        return Objects.hash(title, frequency, start, effort, userIds);
     }
 
     @Override
@@ -67,6 +77,7 @@ public class TaskCreate {
                 .add("frequency", frequency)
                 .add("start", start)
                 .add("effort", effort)
+                .add("userIds", userIds)
                 .toString();
     }
 }

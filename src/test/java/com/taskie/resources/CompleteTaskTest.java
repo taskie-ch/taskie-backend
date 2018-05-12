@@ -29,12 +29,12 @@ public class CompleteTaskTest extends AbstractRequestTest {
     public void requestCompleteTask() {
         assertThat(request().post(Entity.json(ID.getId())).getStatus())
                 .isEqualTo(HttpServletResponse.SC_NO_CONTENT);
-        verify(DAO).complete(ID.getId());
+        verify(DAO).complete(1, ID.getId());
     }
 
     @Test
     public void requestCompleteTaskWithWrongMethod() {
         assertThat(request().get().getStatus()).isEqualTo(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-        verify(DAO).complete(ID.getId());
+        verify(DAO).complete(1, ID.getId());
     }
 }

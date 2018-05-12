@@ -19,7 +19,7 @@ public class TaskServiceHealthCheck extends HealthCheck {
     @Override
     protected Result check() {
         try {
-            taskDao.findById(1);
+            taskDao.findById(1,1);
         } catch (RuntimeException e) {
             return Result.unhealthy(e.getMessage());
         }

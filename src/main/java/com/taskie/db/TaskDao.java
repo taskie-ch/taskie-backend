@@ -1,84 +1,90 @@
 package com.taskie.db;
 
 import com.taskie.api.TaskCreate;
-import com.taskie.core.Effort;
-import com.taskie.core.Frequency;
-import com.taskie.core.Task;
-import com.taskie.core.TaskOccurenceFactory;
+import com.taskie.api.TaskInfo;
+import com.taskie.core.*;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class TaskDao {
 
-    private static final Map<Long, Task> TASKS = new HashMap<>();
+    private final Logger LOG = LoggerFactory.getLogger(Rotation.class);
     private static final AtomicLong UID_GENERATOR = new AtomicLong(1);
 
-    private final TaskOccurenceFactory factory;
     private final FlatDao flatDao;
-
 
     public TaskDao(@Nonnull FlatDao flatDao, @Nonnull UserDao userDao) {
         this.flatDao = flatDao;
-        this.factory = new TaskOccurenceFactory(userDao);
-        save(new TaskCreate("Throw garbage", Frequency.WEEKLY.toString(),
-                        DateTime.parse("2018-05-09T00:00").toString(), Effort.LOW.getValue()),
-                Arrays.asList("Jane", "Tom", "Joe"));
-        save(new TaskCreate("Buy groceries", Frequency.WEEKLY.toString(),
-                        DateTime.parse("2018-05-16T00:00").toString(), Effort.LOW.getValue()),
-                Arrays.asList("Tom", "Joe", "Jane"));
-        save(new TaskCreate("Clean bathroom", Frequency.WEEKLY.toString(),
-                        DateTime.parse("2018-05-19T00:00").toString(), Effort.HIGH.getValue()),
-                Arrays.asList("Joe", "Tom", "Jane"));
+        save(1, new TaskCreate("Throw garbage", Frequency.WEEKLY.toString(),
+                DateTime.parse("2018-05-09T00:00").toString(), Effort.LOW.getValue(),
+                Arrays.asList("Jane", "Tom", "Joe")));
+        save(1, new TaskCreate("Buy groceries", Frequency.WEEKLY.toString(),
+                DateTime.parse("2018-05-16T00:00").toString(), Effort.LOW.getValue(),
+                Arrays.asList("Tom", "Joe", "Jane")));
+        save(1, new TaskCreate("Clean bathroom", Frequency.WEEKLY.toString(),
+                DateTime.parse("2018-05-19T00:00").toString(), Effort.HIGH.getValue(),
+                Arrays.asList("Joe", "Tom", "Jane")));
     }
 
-    public Task delete(long taskId) {
-        return TASKS.remove(taskId);
+    public Task delete(long flatId, long taskId) {
+        return flatDao.findById(flatId).removeTask(taskId);
     }
 
-    public Task save(@Nonnull TaskCreate taskCreate, List<String> userNames) {
+    private Task save(long flatId, long taskId, TaskCreate taskCreate) {
+
+        List<Flatmate> flatmates = flatDao.findUsers(flatId, taskCreate.getUserIds());
+        LOG.info("Set rotation for task [{}] as ", taskCreate.getTitle(), flatmates);
+
         Task task = Task.newBuilder(taskCreate)
-                .setId(UID_GENERATOR.getAndIncrement())
-                .addOccurences(factory.applyOrdered(taskCreate, userNames))
+                .setId(taskId)
+                .setRotation(flatmates)
                 .build();
-        TASKS.put(task.getId(), task);
+        flatDao.findById(flatId).addTask(task);
         return task;
     }
 
-    public Task save(@Nonnull TaskCreate taskCreate) {
-        Task task = Task.newBuilder(taskCreate)
-                .setId(UID_GENERATOR.getAndIncrement())
-                .addOccurences(factory.apply(taskCreate, flatDao.findById(1).getUsers()))
-                .build();
-        TASKS.put(task.getId(), task);
-        return task;
+    public Task save(long flatId, @Nonnull TaskCreate taskCreate) {
+        return save(flatId, UID_GENERATOR.getAndIncrement(), taskCreate);
     }
 
-    public void update(@Nonnull Task task) {
-        TASKS.put(task.getId(), task);
-    }
-
-    @Nonnull
-    public Collection<Task> findAll() {
-        return TASKS.values();
-    }
-
-    @Nonnull
-    public Task findById(long id) {
-        Task task = TASKS.get(id);
+    public void update(long flatId, @Nonnull TaskInfo taskInfo) {
+        Task task = flatDao.findById(flatId).getTask(taskInfo.getId());
         if (task == null) {
-            throw new IllegalArgumentException("No element for id: " + id);
+            throw new IllegalArgumentException("No task for id: " + taskInfo.getId());
+        }
+        save(flatId, task.getId(), taskInfo.deriveTaskCreate());
+    }
+
+    @Nonnull
+    public Collection<Task> findAll(long flatId) {
+        return flatDao.findById(flatId).getTasks();
+    }
+
+    @Nonnull
+    public Task findById(long flatId, long taskId) {
+        Task task = flatDao.findById(flatId).getTask(taskId);
+        if (task == null) {
+            throw new IllegalArgumentException("No element for id: " + taskId);
         }
         return task;
     }
 
-    public void complete(long taskId) {
-        findById(taskId).complete();
+    public void complete(long flatId, long taskId) {
+        findById(flatId, taskId).markTaskAsDone();
     }
 
-    public void uncomplete(long taskId) {
-        findById(taskId).uncomplete();
+    public void uncomplete(long flatId, long taskId) {
+        throw new UnsupportedOperationException("Do we need thos?");
+    }
+
+    public void skip(long flatId, long taskId) {
+        findById(flatId, taskId).skipTask();
     }
 }

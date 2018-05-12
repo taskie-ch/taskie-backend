@@ -14,7 +14,7 @@ public class TaskInfo {
     private final String frequency;
     private final String start;
     private final int effort;
-    private final List<String> users;
+    private final List<String> userIds;
 
     @JsonCreator
     public TaskInfo(@JsonProperty("id") long id,
@@ -22,13 +22,13 @@ public class TaskInfo {
                     @JsonProperty("frequency") String frequency,
                     @JsonProperty("start") String start,
                     @JsonProperty("effort") int effort,
-                    @JsonProperty("usersRotation") List<String> users) {
+                    @JsonProperty("usersRotation") List<String> userIds) {
         this.id = id;
         this.title = title;
         this.frequency = frequency;
         this.start = start;
         this.effort = effort;
-        this.users = users;
+        this.userIds = userIds;
     }
 
     @JsonProperty("id")
@@ -57,8 +57,12 @@ public class TaskInfo {
     }
 
     @JsonProperty("usersRotation")
-    public List<String> getUsers() {
-        return users;
+    public List<String> getUserIds() {
+        return userIds;
+    }
+
+    public TaskCreate deriveTaskCreate() {
+        return new TaskCreate(title, frequency, start, effort, userIds);
     }
 
     @Override
@@ -71,12 +75,12 @@ public class TaskInfo {
                 Objects.equals(title, taskInfo.title) &&
                 Objects.equals(frequency, taskInfo.frequency) &&
                 Objects.equals(start, taskInfo.start) &&
-                Objects.equals(users, taskInfo.users);
+                Objects.equals(userIds, taskInfo.userIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, frequency, start, effort, users);
+        return Objects.hash(id, title, frequency, start, effort, userIds);
     }
 
     @Override
@@ -87,7 +91,7 @@ public class TaskInfo {
                 .add("frequency", frequency)
                 .add("start", start)
                 .add("effort", effort)
-                .add("users", users)
+                .add("userIds", userIds)
                 .toString();
     }
 }

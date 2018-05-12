@@ -3,7 +3,7 @@ package com.taskie.resources;
 import com.codahale.metrics.annotation.Timed;
 import com.taskie.api.User;
 import com.taskie.core.Flat;
-import com.taskie.core.UserPrincipal;
+import com.taskie.core.Flatmate;
 import com.taskie.db.FlatDao;
 import io.dropwizard.jersey.params.LongParam;
 import io.swagger.annotations.Api;
@@ -37,7 +37,7 @@ public class HallOfFameResource {
     public Collection<User> getHallOfFame(@PathParam(FLAT_ID) LongParam flatId) {
         Flat flat = flatDao.findById(flatId.get());
         return flat.getUsers().stream()
-                .map(UserPrincipal::deriveUser)
+                .map(Flatmate::deriveUser)
                 .collect(Collectors.toList());
     }
 }

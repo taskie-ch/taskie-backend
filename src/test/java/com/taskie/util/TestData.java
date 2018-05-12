@@ -33,10 +33,10 @@ public final class TestData {
             .build();
 
     public static final TaskInfo TASK_INFO = new TaskInfo(TASK.getId(), TASK.getTitle(), TASK.getFrequency().name(),
-            "2018-05-20T08:40:19.172Z", TASK.getEffort().getValue(), Arrays.asList("id_joe", "id_jane"));
+            "2018-05-20T08:40:19.172Z", TASK.getEffort().intValue(), Arrays.asList("id_joe", "id_jane"));
 
     private static final TaskCreate TASK_CREATE = new TaskCreate(TASK.getTitle(), TASK.getFrequency().name(),
-            "2018-05-20T08:40:19.172Z", TASK.getEffort().getValue(), Collections.singletonList(USER_PRINCIPAL.getId()));
+            "2018-05-20T08:40:19.172Z", TASK.getEffort().intValue(), Collections.singletonList(USER_PRINCIPAL.getId()));
 
     private TestData() {
         // utility constructor

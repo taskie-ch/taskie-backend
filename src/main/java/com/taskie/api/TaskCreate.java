@@ -4,9 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * JSON API definition of data required to create a task.
+ */
+@Immutable
 public class TaskCreate {
 
     private final String title;

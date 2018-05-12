@@ -6,8 +6,14 @@ import io.dropwizard.auth.basic.BasicCredentials;
 
 import java.util.Optional;
 
+/**
+ * Simple authenticator using a default credential (for the prototype).
+ */
 public class SimpleAuthenticator implements Authenticator<BasicCredentials, UserPrincipal> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<UserPrincipal> authenticate(BasicCredentials credentials) {
         if ("secret".equals(credentials.getPassword())) {

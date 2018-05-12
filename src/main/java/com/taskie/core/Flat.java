@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ *
+ */
 public class Flat {
 
     private static final Logger LOG = LoggerFactory.getLogger(Flat.class);
@@ -16,7 +19,7 @@ public class Flat {
     private final Map<String, Flatmate> users;
     private final Map<Long, Task> tasks;
 
-    public Flat(long id, String name) {
+    private Flat(long id, String name) {
         this.id = id;
         this.name = name;
         this.users = new ConcurrentHashMap<>();
@@ -56,8 +59,8 @@ public class Flat {
         tasks.put(task.getId(), task);
     }
 
-    public Task removeTask(long id) {
-        return tasks.remove(id);
+    public void removeTask(long id) {
+        tasks.remove(id);
     }
 
     public Optional<Flatmate> findUser(final String id) {

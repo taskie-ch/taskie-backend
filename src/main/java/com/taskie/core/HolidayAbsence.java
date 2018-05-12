@@ -13,20 +13,32 @@ public class HolidayAbsence {
     private final DateTime from;
     private final DateTime to;
 
-    public HolidayAbsence(DateTime from, DateTime to) {
+    HolidayAbsence(DateTime from, DateTime to) {
         this.from = from;
         this.to = to;
     }
 
+    /**
+     * @return from date
+     */
     public DateTime getFrom() {
         return from;
     }
 
+    /**
+     * @return to date
+     */
     public DateTime getTo() {
         return to;
     }
 
-    public boolean matches(final DateTime date) {
+    /**
+     * Checks if there is an absence for a given date.
+     *
+     * @param date date to check
+     * @return {@code true} if there is an absence for the date
+     */
+    boolean matches(final DateTime date) {
         return from.isBefore(date) && to.isAfter(date);
     }
 

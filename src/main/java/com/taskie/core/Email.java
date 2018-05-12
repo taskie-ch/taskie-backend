@@ -2,6 +2,8 @@ package com.taskie.core;
 
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Email address representation
  */
@@ -19,8 +21,7 @@ public class Email {
     }
 
     private static String validate(String emailAddress) {
-        // TODO full pattern validation
-        return Objects.requireNonNull(emailAddress, "Address is required");
+        return requireNonNull(emailAddress, "Address is required");
     }
 
     /**

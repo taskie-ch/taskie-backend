@@ -33,13 +33,13 @@ public class InMemoryTaskDao implements TaskService {
     public InMemoryTaskDao(@Nonnull FlatService flatService) {
         this.flatService = flatService;
         save(1, new TaskCreate("Throw garbage", Frequency.WEEKLY.toString(),
-                DateTime.parse("2018-05-09T00:00").toString(), Effort.LOW.getValue(),
+                DateTime.parse("2018-05-09T00:00").toString(), Effort.LOW.intValue(),
                 buildUserIds(Arrays.asList("Jane", "Tom", "Joe"))));
         save(1, new TaskCreate("Buy groceries", Frequency.WEEKLY.toString(),
-                DateTime.parse("2018-05-16T00:00").toString(), Effort.LOW.getValue(),
+                DateTime.parse("2018-05-16T00:00").toString(), Effort.LOW.intValue(),
                 buildUserIds(Arrays.asList("Tom", "Joe", "Jane"))));
         save(1, new TaskCreate("Clean bathroom", Frequency.WEEKLY.toString(),
-                DateTime.parse("2018-05-19T00:00").toString(), Effort.HIGH.getValue(),
+                DateTime.parse("2018-05-19T00:00").toString(), Effort.HIGH.intValue(),
                 buildUserIds(Arrays.asList("Joe", "Tom", "Jane"))));
     }
 

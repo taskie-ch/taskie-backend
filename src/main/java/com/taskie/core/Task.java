@@ -10,6 +10,9 @@ import java.util.Collection;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Task representation.
+ */
 public class Task {
 
     private final long id;
@@ -29,12 +32,24 @@ public class Task {
         this.rotation = rotation;
     }
 
+    /**
+     * Updates the user rotation and due date and rewards the user
+     * that has marked the task as done with the value of the effort.
+     *
+     * @param userId id of the user that has completed the task
+     */
     public void markTaskAsDone(String userId) {
         rewardEffort(userId);
         updateRotation();
         updateDueDate();
     }
 
+    /**
+     * Updates the user rotation and due date and fines the user
+     * that has skipped the task with the value of the effort.
+     *
+     * @param userId id of the user that has skipped the task
+     */
     public void skipTask(String userId) {
         fineEffort(userId);
         updateRotation();
@@ -42,11 +57,11 @@ public class Task {
     }
 
     private void rewardEffort(String userId) {
-        rotation.applyToUser(userId, user -> user.incrementScore(effort.getValue()));
+        rotation.applyToUser(userId, user -> user.incrementScore(effort.intValue()));
     }
 
     private void fineEffort(String userId) {
-        rotation.applyToUser(userId, user -> user.decrementScore(effort.getValue()));
+        rotation.applyToUser(userId, user -> user.decrementScore(effort.intValue()));
     }
 
     private void updateDueDate() {
@@ -57,55 +72,90 @@ public class Task {
         rotation.update();
     }
 
+
+    /**
+     * Derives the JSON API representation of the task id.
+     *
+     * @return JSON API id representation
+     */
     public Id deriveId() {
         return new Id(id);
     }
 
+    /**
+     * Derives the JSON API representation of the task.
+     *
+     * @return JSON API task representation
+     */
     public TaskInfo deriveInfo() {
         return new TaskInfo(id, title, frequency.name(), start.asString(),
-                effort.getValue(), rotation.getRotationUserIds());
+                effort.intValue(), rotation.getRotationUserIds());
     }
 
-    public TaskCreate deriveCreate() {
-        return new TaskCreate(title, frequency.toString(), start.asString(), effort.getValue(), rotation.getRotationUserIds());
-    }
-
+    /**
+     * @return task id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @return task title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * @return task effort
+     */
     public Effort getEffort() {
         return effort;
     }
 
+    /**
+     * @return task frequency
+     */
     public Frequency getFrequency() {
         return frequency;
     }
 
-    public DueDate getStart() {
+    /**
+     * @return task start date
+     */
+    private DueDate getStart() {
         return start;
     }
 
-    public Rotation getRotation() {
+    /**
+     * @return task user rotation
+     */
+    private Rotation getRotation() {
         return rotation;
     }
 
+    /**
+     * Creates a new task builder.
+     *
+     * @return task builder
+     */
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Creates a new task builder with data.
+     *
+     * @param taskCreate new task data
+     * @return task builder
+     */
     public static Builder newBuilder(TaskCreate taskCreate) {
         return new Builder(taskCreate);
     }
 
-    public static Builder newBuilder(Task task) {
-        return new Builder(task);
-    }
-
+    /**
+     * Static builder for task instances.
+     */
     public static class Builder {
 
         private long id = -1;
@@ -117,15 +167,6 @@ public class Task {
 
         private Builder() {
             // default private constructor
-        }
-
-        private Builder(Task task) {
-            setId(task.getId());
-            setTitle(task.getTitle());
-            setEffort(task.getEffort());
-            setFrequency(task.getFrequency());
-            setStartDate(task.getStart());
-            setRotation(task.getRotation());
         }
 
         private Builder(TaskCreate taskCreate) {
@@ -160,13 +201,8 @@ public class Task {
 
         }
 
-        public Builder setStartDate(DueDate startDate) {
+        private Builder setStartDate(DueDate startDate) {
             this.startDate = startDate;
-            return this;
-        }
-
-        public Builder setRotation(Rotation rotation) {
-            this.rotation = rotation;
             return this;
         }
 
@@ -176,6 +212,10 @@ public class Task {
             return setRotation(rota);
         }
 
+        private Builder setRotation(Rotation rotation) {
+            this.rotation = rotation;
+            return this;
+        }
 
         public Task build() {
             checkState(id >= 0, "Id is required");

@@ -123,14 +123,14 @@ public class Task {
     /**
      * @return task start date
      */
-    private DueDate getStart() {
+    public DueDate getStart() {
         return start;
     }
 
     /**
      * @return task user rotation
      */
-    private Rotation getRotation() {
+    public Rotation getRotation() {
         return rotation;
     }
 

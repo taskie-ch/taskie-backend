@@ -1,7 +1,7 @@
 package com.taskie.resources;
 
 import com.taskie.api.UserId;
-import com.taskie.db.TaskDao;
+import com.taskie.db.InMemoryTaskDao;
 import com.taskie.util.TestData;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class CompleteTaskTest extends AbstractRequestTest {
 
     private static final UserId ID = TestData.userId();
     private static final String PATH = ResourcePaths.withBaseAndIds(ResourcePath.TASK_COMPLETE, 1, 1);
-    private static final TaskDao DAO = mock(TaskDao.class);
+    private static final InMemoryTaskDao DAO = mock(InMemoryTaskDao.class);
 
     public CompleteTaskTest() {
         super(resourceRule(new TaskResource(DAO)), PATH);

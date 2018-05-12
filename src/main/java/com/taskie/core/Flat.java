@@ -15,14 +15,12 @@ public class Flat {
     private final String name;
     private final Map<String, Flatmate> users;
     private final Map<Long, Task> tasks;
-    private final HallOfFame hallOfFame;
 
     public Flat(long id, String name) {
         this.id = id;
         this.name = name;
         this.users = new ConcurrentHashMap<>();
         this.tasks = new ConcurrentHashMap<>();
-        this.hallOfFame = new HallOfFame(new HashMap<>());
     }
 
     public static Flat create(long id, String name) {
@@ -39,10 +37,6 @@ public class Flat {
 
     public Set<Flatmate> getUsers() {
         return new HashSet<>(users.values());
-    }
-
-    public HallOfFame getHallOfFame() {
-        return hallOfFame;
     }
 
     public void addFlatmate(Flatmate user) {
@@ -91,22 +85,24 @@ public class Flat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Flat flat = (Flat) o;
-        return Objects.equals(name, flat.name) &&
+        return id == flat.id &&
+                Objects.equals(name, flat.name) &&
                 Objects.equals(users, flat.users) &&
-                Objects.equals(hallOfFame, flat.hallOfFame);
+                Objects.equals(tasks, flat.tasks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, users, hallOfFame);
+        return Objects.hash(id, name, users, tasks);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
+                .add("id", id)
                 .add("name", name)
                 .add("users", users)
-                .add("hallOfFame", hallOfFame)
+                .add("tasks", tasks)
                 .toString();
     }
 }

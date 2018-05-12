@@ -2,7 +2,7 @@ package com.taskie.resources;
 
 import com.taskie.core.Flat;
 import com.taskie.core.Flatmate;
-import com.taskie.db.FlatDao;
+import com.taskie.db.InMemoryFlatDao;
 import com.taskie.util.TestData;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 public class HallOfFameTest extends AbstractRequestTest {
 
     private static final String PATH = "flats/1/hof";
-    private static final FlatDao FLAT_DAO = mock(FlatDao.class);
+    private static final InMemoryFlatDao FLAT_DAO = mock(InMemoryFlatDao.class);
 
     private static final Flatmate USER = TestData.flatmate();
 

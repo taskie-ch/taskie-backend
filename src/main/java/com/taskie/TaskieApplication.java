@@ -1,10 +1,11 @@
 package com.taskie;
 
 import ca.grimoire.dropwizard.cors.CorsBundle;
+import com.taskie.api.FlatService;
+import com.taskie.api.TaskService;
 import com.taskie.auth.AuthConfiguration;
-import com.taskie.db.FlatDao;
-import com.taskie.db.TaskDao;
-import com.taskie.db.UserDao;
+import com.taskie.db.InMemoryFlatDao;
+import com.taskie.db.InMemoryTaskDao;
 import com.taskie.health.FlatServiceHealthCheck;
 import com.taskie.health.TaskServiceHealthCheck;
 import com.taskie.resources.HallOfFameResource;
@@ -42,16 +43,15 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
         configureExceptionMappers(env);
 
-        UserDao userDao = new UserDao();
-        FlatDao flatDao = new FlatDao(userDao);
-        TaskDao taskDao = new TaskDao(flatDao);
+        FlatService flatService = new InMemoryFlatDao();
+        TaskService taskService = new InMemoryTaskDao(flatService);
 
-        env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatDao));
-        env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskDao));
+        env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatService));
+        env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskService));
 
-        env.jersey().register(new TaskResource(taskDao));
-        env.jersey().register(new HallOfFameResource(flatDao));
-        env.jersey().register(new LoginResource(flatDao));
+        env.jersey().register(new TaskResource(taskService));
+        env.jersey().register(new HallOfFameResource(flatService));
+        env.jersey().register(new LoginResource(flatService));
     }
 
     private static void configureExceptionMappers(Environment env) {

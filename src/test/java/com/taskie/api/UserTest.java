@@ -8,6 +8,6 @@ import com.taskie.util.TestData;
 public class UserTest extends AbstractSerializationTest<User> {
 
     public UserTest() {
-        super(TestData.userPrincipal().deriveUser());
+        super(TestData.flatmate().deriveUser());
     }
 }

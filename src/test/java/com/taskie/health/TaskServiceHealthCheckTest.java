@@ -24,13 +24,13 @@ public class TaskServiceHealthCheckTest {
 
     @Test
     public void healthy() {
-        when(taskDao.findById(anyLong())).thenReturn(mock(Task.class));
+        when(taskDao.findById(anyLong(), anyLong())).thenReturn(mock(Task.class));
         assertTrue("Service health", check.check().isHealthy());
     }
 
     @Test
     public void unhealthy() {
-        when(taskDao.findById(anyLong())).thenThrow(new IllegalStateException("Issue"));
+        when(taskDao.findById(anyLong(), anyLong())).thenThrow(new IllegalStateException("Issue"));
         assertFalse("Service health", check.check().isHealthy());
     }
 }

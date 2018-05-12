@@ -1,6 +1,6 @@
 package com.taskie.resources;
 
-import com.taskie.db.UserDao;
+import com.taskie.db.FlatDao;
 import io.dropwizard.jersey.params.LongParam;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 public class LoginResourceTest {
 
-    private final LoginResource resource = new LoginResource(mock(UserDao.class));
+    private final LoginResource resource = new LoginResource(mock(FlatDao.class));
 
     @Test(expected = IllegalArgumentException.class)
     public void authenticateFailsWithException() {

@@ -13,27 +13,27 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
- * Requests {@link TaskResource#uncompleteTask}
+ * Requests {@link TaskResource#skipTask}
  */
-public class UncompleteTaskTest extends AbstractRequestTest {
+public class SkipTaskTest extends AbstractRequestTest {
 
     private static final Id ID = TestData.TASK.deriveId();
     private static final String PATH = "flats/1/tasks/" + ID.getId() + "/uncomplete";
     private static final TaskDao DAO = mock(TaskDao.class);
 
-    public UncompleteTaskTest() {
+    public SkipTaskTest() {
         super(resourceRule(new TaskResource(DAO)), PATH);
     }
 
     @Test
-    public void requestUncompleteTask() {
+    public void requestSkipTask() {
         assertThat(request().post(Entity.json(ID)).getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
-        verify(DAO).uncomplete(ID.getId());
+        verify(DAO).skip(1, ID.getId());
     }
 
     @Test
-    public void requestUncompleteTaskWithWrongMethod() {
+    public void requestSkipTaskWithWrongMethod() {
         assertThat(request().get().getStatus()).isEqualTo(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-        verify(DAO).uncomplete(ID.getId());
+        verify(DAO).skip(1, ID.getId());
     }
 }

@@ -8,12 +8,12 @@ import java.util.Objects;
 /**
  * Holiday absence entered by the user
  */
-public class Absence {
+public class HolidayAbsence {
 
     private final DateTime from;
     private final DateTime to;
 
-    public Absence(DateTime from, DateTime to) {
+    public HolidayAbsence(DateTime from, DateTime to) {
         this.from = from;
         this.to = to;
     }
@@ -26,7 +26,7 @@ public class Absence {
         return to;
     }
 
-    public boolean match(final DateTime date) {
+    public boolean matches(final DateTime date) {
         return from.isBefore(date) && to.isAfter(date);
     }
 
@@ -34,9 +34,9 @@ public class Absence {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Absence absence = (Absence) o;
-        return Objects.equals(from, absence.from) &&
-                Objects.equals(to, absence.to);
+        HolidayAbsence holidayAbsence = (HolidayAbsence) o;
+        return Objects.equals(from, holidayAbsence.from) &&
+                Objects.equals(to, holidayAbsence.to);
     }
 
     @Override

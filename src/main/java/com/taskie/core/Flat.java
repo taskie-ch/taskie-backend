@@ -1,24 +1,32 @@
 package com.taskie.core;
 
 import com.google.common.base.MoreObjects;
-import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Flat {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Flat.class);
+
     private final long id;
     private final String name;
-    private final Set<UserPrincipal> users;
+    private final Map<String, Flatmate> users;
+    private final Map<Long, Task> tasks;
     private final HallOfFame hallOfFame;
 
-    public Flat(long id, String name, Set<UserPrincipal> users, HallOfFame hallOfFame) {
+    public Flat(long id, String name) {
         this.id = id;
         this.name = name;
-        this.users = users;
-        this.hallOfFame = hallOfFame;
+        this.users = new ConcurrentHashMap<>();
+        this.tasks = new ConcurrentHashMap<>();
+        this.hallOfFame = new HallOfFame(new HashMap<>());
+    }
+
+    public static Flat create(long id, String name) {
+        return new Flat(id, name);
     }
 
     public long getId() {
@@ -29,16 +37,53 @@ public class Flat {
         return name;
     }
 
-    public Set<UserPrincipal> getUsers() {
-        return users;
+    public Set<Flatmate> getUsers() {
+        return new HashSet<>(users.values());
     }
 
     public HallOfFame getHallOfFame() {
         return hallOfFame;
     }
 
-    public Set<UserPrincipal> getAbsenceForDate(final DateTime date) {
-        return users.stream().filter(user -> user.isAbsent(date)).collect(Collectors.toSet());
+    public void addFlatmate(Flatmate user) {
+        this.users.put(user.getId(), user);
+    }
+
+    public void addAllFlatmates(Collection<Flatmate> users) {
+        LOG.info("Flat:{} - Adding new flatmates {}", id, users);
+        users.forEach(user -> this.users.put(user.getId(), user));
+    }
+
+    public void removeFlatmate(String id) {
+        users.remove(id);
+    }
+
+    public void addTask(Task task) {
+        tasks.put(task.getId(), task);
+    }
+
+    public Task removeTask(long id) {
+        return tasks.remove(id);
+    }
+
+    public Optional<Flatmate> findUser(final String id) {
+        return users.values().stream()
+                .filter(user -> user.getId().equals(id))
+                .reduce((first, next) -> first);
+    }
+
+    public Optional<Flatmate> findUserByName(final String name) {
+        return users.values().stream()
+                .filter(user -> user.getName().equals(name))
+                .reduce((first, next) -> first);
+    }
+
+    public Collection<Task> getTasks() {
+        return tasks.values();
+    }
+
+    public Task getTask(long id) {
+        return tasks.get(id);
     }
 
     @Override

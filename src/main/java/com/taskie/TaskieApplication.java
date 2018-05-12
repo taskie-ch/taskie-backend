@@ -44,14 +44,14 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
         UserDao userDao = new UserDao();
         FlatDao flatDao = new FlatDao(userDao);
-        TaskDao taskDao = new TaskDao(flatDao, userDao);
+        TaskDao taskDao = new TaskDao(flatDao);
 
         env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatDao));
         env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskDao));
 
         env.jersey().register(new TaskResource(taskDao));
         env.jersey().register(new HallOfFameResource(flatDao));
-        env.jersey().register(new LoginResource(userDao));
+        env.jersey().register(new LoginResource(flatDao));
     }
 
     private static void configureExceptionMappers(Environment env) {

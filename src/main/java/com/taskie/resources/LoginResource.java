@@ -3,7 +3,8 @@ package com.taskie.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.taskie.api.User;
-import com.taskie.db.UserDao;
+import com.taskie.core.Flatmate;
+import com.taskie.db.FlatDao;
 import io.dropwizard.jersey.params.LongParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,15 +13,16 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
-import static com.taskie.resources.ResourcePath.FLATS;
-import static com.taskie.resources.ResourcePath.FLAT_ID;
-import static com.taskie.resources.ResourcePath.LOGIN;
+import static com.taskie.resources.ResourcePath.*;
 import static java.util.Objects.requireNonNull;
 
 @Path(FLATS)
@@ -28,12 +30,12 @@ import static java.util.Objects.requireNonNull;
 @Produces(MediaType.APPLICATION_JSON)
 public class LoginResource {
 
-    private final Logger LOG = LoggerFactory.getLogger(LoginResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoginResource.class);
 
-    private final UserDao userDao;
+    private final FlatDao flatDao;
 
-    public LoginResource(@Nonnull UserDao userDao) {
-        this.userDao = requireNonNull(userDao, "UserDao is required");
+    public LoginResource(@Nonnull FlatDao flatDao) {
+        this.flatDao = requireNonNull(flatDao, "FlatDao is required");
     }
 
     @POST
@@ -44,7 +46,10 @@ public class LoginResource {
     public User authenticate(@PathParam(FLAT_ID) LongParam flatId, @Context SecurityContext context) {
         final String name = requireAuthenticated(context.getUserPrincipal()).getName();
         LOG.info("{} requested login for flat {}", name, flatId);
-        return userDao.findByName(name).deriveUser();
+        return flatDao.findById(flatId.get()).findUserByName(name).map(Flatmate::deriveUser).
+                <IllegalStateException>orElseThrow(() -> {
+                    throw new IllegalStateException("Could not find user for name " + name);
+                });
     }
 
     private static Principal requireAuthenticated(Principal principal) {

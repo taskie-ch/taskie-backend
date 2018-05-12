@@ -11,13 +11,13 @@ public class UserDao {
     private final Map<String, UserPrincipal> users = new HashMap<>();
 
     public UserDao() {
-        save("Tom", 5);
-        save("Jane", 6);
-        save("Joe", 4);
+        save("Tom");
+        save("Jane");
+        save("Joe");
     }
 
-    public UserPrincipal save(String name, int score) {
-        UserPrincipal user = new UserPrincipal(generateId(name), name, score);
+    public UserPrincipal save(String name) {
+        UserPrincipal user = new UserPrincipal(generateId(name), name);
         users.put(name, user);
         return user;
     }
@@ -27,7 +27,7 @@ public class UserDao {
         return user != null ? user : UserPrincipal.NONE;
     }
 
-    private String generateId(String name) {
+    static String generateId(String name) {
         return Credential.MD5.digest(name).substring(4);
     }
 }

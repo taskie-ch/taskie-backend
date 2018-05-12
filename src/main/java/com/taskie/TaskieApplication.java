@@ -44,7 +44,7 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
         UserDao userDao = new UserDao();
         FlatDao flatDao = new FlatDao(userDao);
-        TaskDao taskDao = new TaskDao(flatDao, userDao);
+        TaskDao taskDao = new TaskDao(flatDao);
 
         env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatDao));
         env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskDao));

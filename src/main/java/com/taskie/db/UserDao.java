@@ -27,7 +27,7 @@ public class UserDao {
         return user != null ? user : UserPrincipal.NONE;
     }
 
-    private String generateId(String name) {
+    static String generateId(String name) {
         return Credential.MD5.digest(name).substring(4);
     }
 }

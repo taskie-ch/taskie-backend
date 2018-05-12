@@ -10,7 +10,7 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class DueDate {
 
-    private final Logger LOG = LoggerFactory.getLogger(Task.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Task.class);
 
     @GuardedBy("this")
     private DateTime date;

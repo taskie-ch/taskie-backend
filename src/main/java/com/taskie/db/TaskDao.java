@@ -12,25 +12,30 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class TaskDao {
 
-    private final Logger LOG = LoggerFactory.getLogger(Rotation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Rotation.class);
     private static final AtomicLong UID_GENERATOR = new AtomicLong(1);
 
     private final FlatDao flatDao;
 
-    public TaskDao(@Nonnull FlatDao flatDao, @Nonnull UserDao userDao) {
+    public TaskDao(@Nonnull FlatDao flatDao) {
         this.flatDao = flatDao;
         save(1, new TaskCreate("Throw garbage", Frequency.WEEKLY.toString(),
                 DateTime.parse("2018-05-09T00:00").toString(), Effort.LOW.getValue(),
-                Arrays.asList("Jane", "Tom", "Joe")));
+                buildUserIds(Arrays.asList("Jane", "Tom", "Joe"))));
         save(1, new TaskCreate("Buy groceries", Frequency.WEEKLY.toString(),
                 DateTime.parse("2018-05-16T00:00").toString(), Effort.LOW.getValue(),
-                Arrays.asList("Tom", "Joe", "Jane")));
+                buildUserIds(Arrays.asList("Tom", "Joe", "Jane"))));
         save(1, new TaskCreate("Clean bathroom", Frequency.WEEKLY.toString(),
                 DateTime.parse("2018-05-19T00:00").toString(), Effort.HIGH.getValue(),
-                Arrays.asList("Joe", "Tom", "Jane")));
+                buildUserIds(Arrays.asList("Joe", "Tom", "Jane"))));
+    }
+
+    private static List<String> buildUserIds(List<String> userNames) {
+        return userNames.stream().map(UserDao::generateId).collect(Collectors.toList());
     }
 
     public Task delete(long flatId, long taskId) {
@@ -40,7 +45,7 @@ public class TaskDao {
     private Task save(long flatId, long taskId, TaskCreate taskCreate) {
 
         List<Flatmate> flatmates = flatDao.findUsers(flatId, taskCreate.getUserIds());
-        LOG.info("Set rotation for task [{}] as ", taskCreate.getTitle(), flatmates);
+        LOG.info("Set rotation for task [{}] as {}", taskCreate.getTitle(), flatmates);
 
         Task task = Task.newBuilder(taskCreate)
                 .setId(taskId)

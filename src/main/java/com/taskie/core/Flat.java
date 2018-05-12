@@ -1,11 +1,15 @@
 package com.taskie.core;
 
 import com.google.common.base.MoreObjects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Flat {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Flat.class);
 
     private final long id;
     private final String name;
@@ -46,6 +50,7 @@ public class Flat {
     }
 
     public void addAllFlatmates(Collection<Flatmate> users) {
+        LOG.info("Flat:{} - Adding new flatmates {}", id, users);
         users.forEach(user -> this.users.put(user.getId(), user));
     }
 
@@ -61,7 +66,13 @@ public class Flat {
         return tasks.remove(id);
     }
 
-    public Optional<Flatmate> findUser(String name) {
+    public Optional<Flatmate> findUser(final String id) {
+        return users.values().stream()
+                .filter(user -> user.getId().equals(id))
+                .reduce((first, next) -> first);
+    }
+
+    public Optional<Flatmate> findUserByName(final String name) {
         return users.values().stream()
                 .filter(user -> user.getName().equals(name))
                 .reduce((first, next) -> first);

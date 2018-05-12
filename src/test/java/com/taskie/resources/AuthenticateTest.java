@@ -41,7 +41,7 @@ public class AuthenticateTest extends AbstractRequestTest {
     public void requestAuthentication() {
 
         when(DAO.findById(1)).thenReturn(FLAT);
-        when(FLAT.findUser(FLATMATE.getName())).thenReturn(Optional.of(FLATMATE));
+        when(FLAT.findUserByName(FLATMATE.getName())).thenReturn(Optional.of(FLATMATE));
         final Response response = request()
                 .header("Authorization", "Basic " + Base64.encodeAsString(FLATMATE.getName() + ":secret"))
                 .post(Entity.json(FLAT_ID));

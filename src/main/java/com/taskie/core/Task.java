@@ -57,12 +57,12 @@ public class Task {
     }
 
     public TaskInfo deriveInfo() {
-        return new TaskInfo(id, title, frequency.name(), start.toString(),
+        return new TaskInfo(id, title, frequency.name(), start.asString(),
                 effort.getValue(), rotation.getRotationUserIds());
     }
 
     public TaskCreate deriveCreate() {
-        return new TaskCreate(title, frequency.toString(), start.toString(), effort.getValue(), rotation.getRotationUserIds());
+        return new TaskCreate(title, frequency.toString(), start.asString(), effort.getValue(), rotation.getRotationUserIds());
     }
 
     public long getId() {

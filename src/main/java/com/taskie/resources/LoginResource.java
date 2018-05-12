@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 @Produces(MediaType.APPLICATION_JSON)
 public class LoginResource {
 
-    private final Logger LOG = LoggerFactory.getLogger(LoginResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoginResource.class);
 
     private final FlatDao flatDao;
 
@@ -46,7 +46,7 @@ public class LoginResource {
     public User authenticate(@PathParam(FLAT_ID) LongParam flatId, @Context SecurityContext context) {
         final String name = requireAuthenticated(context.getUserPrincipal()).getName();
         LOG.info("{} requested login for flat {}", name, flatId);
-        return flatDao.findById(flatId.get()).findUser(name).map(Flatmate::deriveUser).
+        return flatDao.findById(flatId.get()).findUserByName(name).map(Flatmate::deriveUser).
                 <IllegalStateException>orElseThrow(() -> {
                     throw new IllegalStateException("Could not find user for name " + name);
                 });

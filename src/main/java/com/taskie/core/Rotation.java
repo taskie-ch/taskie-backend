@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public class Rotation {
 
-    private final Logger LOG = LoggerFactory.getLogger(Rotation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Rotation.class);
 
     private Queue<Flatmate> rotation = new LinkedList<>();
 

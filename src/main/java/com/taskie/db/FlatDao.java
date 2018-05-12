@@ -26,13 +26,13 @@ public class FlatDao {
         return flats.get(id);
     }
 
-    public List<Flatmate> findUsers(long flatId, List<String> names) {
+    public List<Flatmate> findUsers(long flatId, List<String> ids) {
 
         Flat flat = findById(flatId);
         final List<Flatmate> users = new ArrayList<>();
 
-        for (String name : names) {
-            flat.findUser(name).ifPresent(users::add);
+        for (String id : ids) {
+            flat.findUser(id).ifPresent(users::add);
         }
         return users;
     }

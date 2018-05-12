@@ -27,7 +27,7 @@ import static com.taskie.resources.ResourcePath.*;
 @Produces(MediaType.APPLICATION_JSON)
 public class TaskResource {
 
-    private final Logger LOG = LoggerFactory.getLogger(TaskResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TaskResource.class);
 
     private final TaskDao taskDao;
 

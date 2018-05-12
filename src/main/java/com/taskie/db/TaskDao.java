@@ -81,11 +81,11 @@ public class TaskDao {
         return task;
     }
 
-    public void complete(long flatId, long taskId) {
-        findById(flatId, taskId).markTaskAsDone();
+    public void complete(long flatId, long taskId, String userId) {
+        findById(flatId, taskId).markTaskAsDone(userId);
     }
 
-    public void skip(long flatId, long taskId) {
-        findById(flatId, taskId).skipTask();
+    public void skip(long flatId, long taskId, String userid) {
+        findById(flatId, taskId).skipTask(userid);
     }
 }

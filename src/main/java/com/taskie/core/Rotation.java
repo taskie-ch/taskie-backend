@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -22,20 +23,18 @@ public class Rotation {
         rotation.addAll(users);
     }
 
-    public Flatmate currentUser() {
-        return rotation.peek();
+    public void applyToUser(String id, Consumer<Flatmate> consumer) {
+        rotation.stream().filter(user -> user.getId().equals(id))
+                .reduce((flatmate, flatmate2) -> flatmate)
+                .ifPresent(consumer);
     }
 
-    public void update() {
+    public synchronized void update() {
         Flatmate current = rotation.remove();
         LOG.info("Rotating {} to the end", current);
         rotation.add(current);
 
         // TODO skip if user is absent
-    }
-
-    public void rollback() {
-        // TODO do we need this even?
     }
 
     List<String> getRotationUserIds() {

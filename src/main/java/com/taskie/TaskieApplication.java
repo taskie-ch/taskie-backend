@@ -67,12 +67,12 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
     public void run(final TaskieConfiguration config,
                     final Environment env) {
 
-        AuthConfiguration.configure(env);
-
         configureExceptionMappers(env);
 
         FlatService flatService = InMemoryFlatDao.create();
         TaskService taskService = InMemoryTaskDao.create(flatService);
+
+        AuthConfiguration.configure(env, flatService);
 
         env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatService));
         env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskService));

@@ -100,6 +100,13 @@ public class Flatmate {
     }
 
     /**
+     * @return user principal
+     */
+    public UserPrincipal getPrincipal() {
+        return principal;
+    }
+
+    /**
      * Derives the JSON API representation of the current user.
      *
      * @return JSON API representation

@@ -29,7 +29,7 @@ public class AuthenticateTest extends AbstractRequestTest {
     private static final Flatmate FLATMATE = TestData.flatmate();
 
     public AuthenticateTest() {
-        super(resourceRule(new LoginResource(DAO)), PATH);
+        super(resourceRule(new LoginResource(DAO), DAO), PATH);
     }
 
     @Test

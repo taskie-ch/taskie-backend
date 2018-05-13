@@ -12,6 +12,11 @@ public final class UserPrincipal implements Principal {
 
     private final String id;
     private final String name;
+    /**
+     * Static password for the prototype.
+     */
+    // TODO use hash
+    private static final String PASSWORD = "secret";
 
     /**
      * Creates an user principal.
@@ -23,6 +28,16 @@ public final class UserPrincipal implements Principal {
     public UserPrincipal(String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    /**
+     * Authenticates a user with a password.
+     *
+     * @param password user password
+     * @return {@code true} if password matches
+     */
+    public boolean authenticate(String password) {
+        return PASSWORD.equals(password);
     }
 
     /**

@@ -52,21 +52,21 @@ public class Score {
     }
 
     @Override
-    public synchronized final boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (!(o instanceof Score)) return false;
         Score score = (Score) o;
-        return points == score.points;
+        return intValue() == score.intValue();
     }
 
     @Override
-    public synchronized final int hashCode() {
-        return Objects.hash(points);
+    public final int hashCode() {
+        return Objects.hash(intValue());
     }
 
     @Override
-    public synchronized String toString() {
+    public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("points", points)
+                .add("points", intValue())
                 .toString();
     }
 }

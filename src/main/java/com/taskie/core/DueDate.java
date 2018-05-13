@@ -36,6 +36,13 @@ class DueDate {
     }
 
     /**
+     * @return date
+     */
+    synchronized DateTime getDate() {
+        return date;
+    }
+
+    /**
      * @return date as string
      * @see DateTime#toString()
      */
@@ -44,21 +51,21 @@ class DueDate {
     }
 
     @Override
-    public synchronized final boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (!(o instanceof DueDate)) return false;
         DueDate dueDate = (DueDate) o;
-        return Objects.equals(date, dueDate.date);
+        return Objects.equals(getDate(), dueDate.getDate());
     }
 
     @Override
-    public synchronized final int hashCode() {
-        return Objects.hash(date);
+    public final int hashCode() {
+        return Objects.hash(getDate());
     }
 
     @Override
-    public synchronized String toString() {
+    public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("date", date)
+                .add("date", getDate())
                 .toString();
     }
 }

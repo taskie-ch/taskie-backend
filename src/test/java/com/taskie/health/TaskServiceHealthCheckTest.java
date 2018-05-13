@@ -1,7 +1,7 @@
 package com.taskie.health;
 
+import com.taskie.api.TaskService;
 import com.taskie.core.Task;
-import com.taskie.db.TaskDao;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,24 +13,24 @@ import static org.mockito.Mockito.when;
 
 public class TaskServiceHealthCheckTest {
 
-    private TaskDao taskDao;
+    private TaskService taskService;
     private TaskServiceHealthCheck check;
 
     @Before
     public void setUp() {
-        taskDao = mock(TaskDao.class);
-        check = new TaskServiceHealthCheck(taskDao);
+        taskService = mock(TaskService.class);
+        check = new TaskServiceHealthCheck(taskService);
     }
 
     @Test
     public void healthy() {
-        when(taskDao.findById(anyLong(), anyLong())).thenReturn(mock(Task.class));
+        when(taskService.findById(anyLong(), anyLong())).thenReturn(mock(Task.class));
         assertTrue("Service health", check.check().isHealthy());
     }
 
     @Test
     public void unhealthy() {
-        when(taskDao.findById(anyLong(), anyLong())).thenThrow(new IllegalStateException("Issue"));
+        when(taskService.findById(anyLong(), anyLong())).thenThrow(new IllegalStateException("Issue"));
         assertFalse("Service health", check.check().isHealthy());
     }
 }

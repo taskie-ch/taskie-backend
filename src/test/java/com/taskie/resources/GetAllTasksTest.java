@@ -2,7 +2,7 @@ package com.taskie.resources;
 
 import com.taskie.api.TaskInfo;
 import com.taskie.core.Task;
-import com.taskie.db.TaskDao;
+import com.taskie.db.InMemoryTaskDao;
 import com.taskie.util.TestData;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 public class GetAllTasksTest extends AbstractRequestTest {
 
     private static final String PATH = "/flats/1/tasks";
-    private static final TaskDao DAO = mock(TaskDao.class);
+    private static final InMemoryTaskDao DAO = mock(InMemoryTaskDao.class);
     private static final TaskInfo TASK_INFO = TestData.TASK_INFO;
 
     public GetAllTasksTest() {

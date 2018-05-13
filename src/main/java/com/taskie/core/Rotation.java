@@ -19,17 +19,10 @@ public class Rotation {
 
     private Queue<Flatmate> rotation = new LinkedList<>();
 
-    public void addAll(Collection<Flatmate> users) {
-        rotation.addAll(users);
-    }
-
-    public void applyToUser(String id, Consumer<Flatmate> consumer) {
-        rotation.stream().filter(user -> user.getId().equals(id))
-                .reduce((flatmate, flatmate2) -> flatmate)
-                .ifPresent(consumer);
-    }
-
-    public synchronized void update() {
+    /**
+     * Rotates the current user to the end.
+     */
+    synchronized void update() {
         Flatmate current = rotation.remove();
         LOG.info("Rotating {} to the end", current);
         rotation.add(current);
@@ -37,6 +30,33 @@ public class Rotation {
         // TODO skip if user is absent
     }
 
+    /**
+     * Extends the rotation with users. Ordering is preserved.
+     *
+     * @param users users to add to the rotation
+     */
+    synchronized void addAll(Collection<Flatmate> users) {
+        rotation.addAll(users);
+    }
+
+    /**
+     * Applies an action to a user in the rotation, if present.
+     *
+     * @param id       id of the user
+     * @param consumer action to be applied
+     */
+    void applyToUser(String id, Consumer<Flatmate> consumer) {
+        rotation.stream().filter(user -> user.getId().equals(id))
+                .reduce((flatmate, flatmate2) -> flatmate)
+                .ifPresent(consumer);
+    }
+
+
+    /**
+     * Collects all ids of users in the rotation in the right order.
+     *
+     * @return list of user ids
+     */
     List<String> getRotationUserIds() {
         return rotation.stream()
                 .map(Flatmate::getId)

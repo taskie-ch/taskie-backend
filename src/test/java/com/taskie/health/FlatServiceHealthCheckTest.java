@@ -1,7 +1,7 @@
 package com.taskie.health;
 
+import com.taskie.api.FlatService;
 import com.taskie.core.Flat;
-import com.taskie.db.FlatDao;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,12 +13,12 @@ import static org.mockito.Mockito.when;
 
 public class FlatServiceHealthCheckTest {
 
-    private FlatDao flatDao;
+    private FlatService flatDao;
     private FlatServiceHealthCheck check;
 
     @Before
     public void setUp() {
-        flatDao = mock(FlatDao.class);
+        flatDao = mock(FlatService.class);
         check = new FlatServiceHealthCheck(flatDao);
     }
 

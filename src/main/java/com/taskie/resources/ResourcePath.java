@@ -1,11 +1,14 @@
 package com.taskie.resources;
 
+/**
+ * Collection of resource paths used for endpoints.
+ */
 class ResourcePath {
 
     static final String FLAT_ID = "flatId";
-    static final String TASK_ID = "taskId";
-
     private static final String FLAT_ID_PARAM = "/{" + FLAT_ID + "}";
+
+    static final String TASK_ID = "taskId";
 
     static final String FLATS = "/flats";
     static final String HALL_OF_FAME = FLAT_ID_PARAM + "/hof";

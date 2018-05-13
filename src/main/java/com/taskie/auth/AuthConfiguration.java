@@ -13,12 +13,20 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import javax.ws.rs.container.DynamicFeature;
 
+/**
+ * Configuration holder for service authentication.
+ */
 public final class AuthConfiguration {
 
     private AuthConfiguration() {
         // utility constructor
     }
 
+    /**
+     * Enable authentication.
+     *
+     * @param env environment container
+     */
     public static void configure(Environment env) {
         env.jersey().register(buildAuthFilter(env.metrics()));
         env.jersey().register(RolesAllowedDynamicFeature.class);
@@ -28,6 +36,7 @@ public final class AuthConfiguration {
 
     private static DynamicFeature buildAuthFilter(MetricRegistry metricRegistry) {
 
+        // enables caching for authentication
         CachingAuthenticator<BasicCredentials, UserPrincipal> cachingAuthenticator =
                 new CachingAuthenticator<>(metricRegistry, new SimpleAuthenticator(),
                         CacheBuilderSpec.parse("maximumSize=10000, expireAfterAccess=10m"));

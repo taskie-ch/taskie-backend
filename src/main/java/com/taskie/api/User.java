@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
 /**
- * User exposed by the API
+ * JSON API definition of a user.
  */
+@Immutable
 public class User {
 
     private final String id;

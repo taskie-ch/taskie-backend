@@ -2,7 +2,7 @@ package com.taskie.resources;
 
 import com.taskie.core.Flat;
 import com.taskie.core.Flatmate;
-import com.taskie.db.FlatDao;
+import com.taskie.db.InMemoryFlatDao;
 import com.taskie.util.TestData;
 import org.glassfish.jersey.internal.util.Base64;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class AuthenticateTest extends AbstractRequestTest {
     private static final String PATH = ResourcePaths.withBaseAndFlatId(ResourcePath.LOGIN, FLAT_ID);
 
     private static final Flat FLAT = mock(Flat.class);
-    private static final FlatDao DAO = mock(FlatDao.class);
+    private static final InMemoryFlatDao DAO = mock(InMemoryFlatDao.class);
     private static final Flatmate FLATMATE = TestData.flatmate();
 
     public AuthenticateTest() {

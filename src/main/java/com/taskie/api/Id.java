@@ -4,8 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
+/**
+ * JSON API definition of an id.
+ */
+@Immutable
 public class Id {
 
     private final long id;

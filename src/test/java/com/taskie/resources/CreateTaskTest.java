@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.core.Task;
-import com.taskie.db.TaskDao;
+import com.taskie.db.InMemoryTaskDao;
 import com.taskie.util.TestData;
 import io.dropwizard.jackson.Jackson;
 import org.junit.Before;
@@ -27,7 +27,7 @@ public class CreateTaskTest extends AbstractRequestTest {
     private static final String PATH = "/flats/1/tasks";
 
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
-    private static final TaskDao DAO = mock(TaskDao.class);
+    private static final InMemoryTaskDao DAO = mock(InMemoryTaskDao.class);
     private static final Task TASK = TestData.TASK;
     private static final TaskCreate TASK_CREATE = TestData.taskCreate();
 

@@ -10,6 +10,8 @@ import java.util.Objects;
 
 /**
  * A user in the context of the application.
+ * <p>
+ * Use {@link Flatmate#create(UserPrincipal, Email, Score)} to create a new flatmate.
  */
 public class Flatmate {
 
@@ -25,6 +27,14 @@ public class Flatmate {
         this.absences = new ArrayList<>();
     }
 
+    /**
+     * Creates a new instance of {@link Flatmate}.
+     *
+     * @param principal user principal
+     * @param email     email address
+     * @param score     user score
+     * @return new flatmate instance
+     */
     public static Flatmate create(UserPrincipal principal, Email email, Score score) {
         return new Flatmate(principal, email, score);
     }
@@ -90,6 +100,13 @@ public class Flatmate {
     }
 
     /**
+     * @return user principal
+     */
+    public UserPrincipal getPrincipal() {
+        return principal;
+    }
+
+    /**
      * Derives the JSON API representation of the current user.
      *
      * @return JSON API representation
@@ -99,9 +116,8 @@ public class Flatmate {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public final boolean equals(Object o) {
+        if (!(o instanceof Flatmate)) return false;
         Flatmate flatmate = (Flatmate) o;
         return Objects.equals(principal, flatmate.principal) &&
                 Objects.equals(email, flatmate.email) &&
@@ -110,7 +126,7 @@ public class Flatmate {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(principal, email, score, absences);
     }
 

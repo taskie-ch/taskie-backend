@@ -3,7 +3,7 @@ package com.taskie.resources;
 /**
  * Collection of resource paths used for endpoints.
  */
-class ResourcePath {
+final class ResourcePath {
 
     static final String FLAT_ID = "flatId";
     private static final String FLAT_ID_PARAM = "/{" + FLAT_ID + "}";
@@ -17,4 +17,8 @@ class ResourcePath {
     static final String TASK = TASKS + "/{" + TASK_ID + "}";
     static final String TASK_COMPLETE = TASK + "/complete";
     static final String TASK_UNCOMPLETE = TASK + "/uncomplete";
+
+    private ResourcePath() {
+        // utility constructor
+    }
 }

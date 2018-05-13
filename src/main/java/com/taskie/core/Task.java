@@ -1,17 +1,21 @@
 package com.taskie.core;
 
+import com.google.common.base.MoreObjects;
 import com.taskie.api.Id;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
 import org.joda.time.DateTime;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Task representation.
+ * <p>
+ * Use {@link Task#newBuilder()} to create a new task.
  */
 public class Task {
 
@@ -56,18 +60,34 @@ public class Task {
         updateDueDate();
     }
 
+    /**
+     * Rewards the user using the effort value.
+     *
+     * @param userId id of the user
+     */
     private void rewardEffort(String userId) {
         rotation.applyToUser(userId, user -> user.incrementScore(effort.intValue()));
     }
 
+    /**
+     * Fines the user using the effort value.
+     *
+     * @param userId id of the user
+     */
     private void fineEffort(String userId) {
         rotation.applyToUser(userId, user -> user.decrementScore(effort.intValue()));
     }
 
+    /**
+     * Updates the due date using the frequency.
+     */
     private void updateDueDate() {
         start.update(frequency);
     }
 
+    /**
+     * Updates the rotation with the next user in line.
+     */
     private void updateRotation() {
         rotation.update();
     }
@@ -132,6 +152,35 @@ public class Task {
      */
     public Rotation getRotation() {
         return rotation;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return id == task.id &&
+                Objects.equals(title, task.title) &&
+                effort == task.effort &&
+                frequency == task.frequency &&
+                Objects.equals(start, task.start) &&
+                Objects.equals(rotation, task.rotation);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(id, title, effort, frequency, start, rotation);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("title", title)
+                .add("effort", effort)
+                .add("frequency", frequency)
+                .add("start", start)
+                .add("rotation", rotation)
+                .toString();
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.taskie.core;
 
+import com.google.common.base.MoreObjects;
+
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 
 /**
  * Score of a user used for the hall of fame.
@@ -46,5 +49,24 @@ public class Score {
      */
     synchronized void decrement(int points) {
         this.points -= points;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Score)) return false;
+        Score score = (Score) o;
+        return intValue() == score.intValue();
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(intValue());
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("points", intValue())
+                .toString();
     }
 }

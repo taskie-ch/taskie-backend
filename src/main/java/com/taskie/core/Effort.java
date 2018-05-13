@@ -18,7 +18,7 @@ public enum Effort {
     /**
      * Very high effort
      */
-    HUGE(3);
+    HUGE(4);
 
     private final int value;
 

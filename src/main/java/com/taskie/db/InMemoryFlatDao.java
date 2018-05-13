@@ -9,19 +9,31 @@ import java.util.*;
 
 /**
  * Data access object for {@link Flat} storing data in memory.
+ * <p>
+ * Use {@link InMemoryFlatDao#create()} to create a new DAO.
  */
 public class InMemoryFlatDao implements FlatService {
 
     private final Map<Long, Flat> flats = new HashMap<>();
 
-    public InMemoryFlatDao() {
+    private InMemoryFlatDao(List<Flat> flats) {
+        flats.forEach(this::save);
+    }
+
+    /**
+     * Creates a new instance of {@link InMemoryFlatDao}
+     * and initialises it with "Taskie Home" flat (for the prototype).
+     *
+     * @return initialised in-memory flat DAO
+     */
+    public static InMemoryFlatDao create() {
         Flat flat = Flat.create(1, "Taskie Home");
         Set<Flatmate> users = new HashSet<>(3);
         users.add(Flatmate.create(principal("Tom"), new Email("tom@students.zhaw.ch"), new Score(5)));
         users.add(Flatmate.create(principal("Jane"), new Email("jane@students.zhaw.ch"), new Score(6)));
         users.add(Flatmate.create(principal("Joe"), new Email("joe@students.zhaw.ch"), new Score(4)));
         flat.addAllFlatmates(users);
-        save(flat);
+        return new InMemoryFlatDao(Collections.singletonList(flat));
     }
 
     /**
@@ -30,7 +42,7 @@ public class InMemoryFlatDao implements FlatService {
      * @param name user name
      * @return MD5 hash of user name
      */
-    static String generateUserId(String name) {
+    public static String generateUserId(String name) {
         return Credential.MD5.digest(name).substring(4);
     }
 

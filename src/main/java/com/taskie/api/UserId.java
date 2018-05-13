@@ -11,7 +11,7 @@ import java.util.Objects;
  * JSON API definition of a user id.
  */
 @Immutable
-public class UserId {
+public final class UserId {
 
     private final String userId;
 
@@ -27,8 +27,7 @@ public class UserId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof UserId)) return false;
         UserId userId1 = (UserId) o;
         return Objects.equals(userId, userId1.userId);
     }

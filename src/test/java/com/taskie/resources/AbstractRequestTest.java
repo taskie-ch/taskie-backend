@@ -2,6 +2,7 @@ package com.taskie.resources;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.taskie.api.FlatService;
 import com.taskie.auth.SimpleAuthenticator;
 import com.taskie.auth.SimpleAuthorizer;
 import com.taskie.core.UserPrincipal;
@@ -14,7 +15,6 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.junit.Rule;
 
 import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -53,19 +53,24 @@ public abstract class AbstractRequestTest {
     }
 
     /**
-     * @return response builder
-     */
-    WebTarget target() {
-        return resources.target(path);
-    }
-
-    /**
      * Builds a test rule from resource using own exception mappers and authentication.
      *
      * @param resource endpoint resource
      * @return endpoint rule
      */
     static ResourceTestRule resourceRule(Object resource) {
+        return resourceRule(resource, mock(FlatService.class));
+    }
+
+    /**
+     * Builds a test rule from resource using own exception mappers and authentication.
+     * For tests using authentication flatService has to provide the required user principals.
+     *
+     * @param resource    endpoint resource
+     * @param flatService flat service providing user principals.
+     * @return endpoint rule
+     */
+    static ResourceTestRule resourceRule(Object resource, FlatService flatService) {
 
         MetricRegistry metricRegistry = mock(MetricRegistry.class);
         when(metricRegistry.meter(anyString())).thenReturn(mock(Meter.class));
@@ -75,7 +80,7 @@ public abstract class AbstractRequestTest {
                 .addResource(new IllegalArgumentExceptionMapper(metricRegistry))
                 .addProvider(new SafeAuthDynamicFeature(
                         new BasicCredentialAuthFilter.Builder<UserPrincipal>()
-                                .setAuthenticator(new SimpleAuthenticator())
+                                .setAuthenticator(new SimpleAuthenticator(flatService))
                                 .setAuthorizer(new SimpleAuthorizer())
                                 .buildAuthFilter()))
                 .addProvider(RolesAllowedDynamicFeature.class)

@@ -1,13 +1,13 @@
 package com.taskie.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.taskie.AbstractEntityTest;
 import io.dropwizard.jackson.Jackson;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static io.dropwizard.testing.FixtureHelpers.fixture;
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -17,21 +17,18 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @param <T> object type
  */
-abstract class AbstractSerializationTest<T> {
+abstract class AbstractSerializationTest<T> extends AbstractEntityTest<T> {
 
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
 
-    private final T object;
-    private final Class<?> objectClass;
     private final String fixture;
 
     /**
      * @param object API object under test
      */
     AbstractSerializationTest(T object) {
-        this.object = requireNonNull(object, "Object is required");
-        this.objectClass = object.getClass();
-        this.fixture = fixture("fixtures/" + objectClass.getSimpleName() + ".json");
+        super(object);
+        this.fixture = fixture("fixtures/" + testEntityClass.getSimpleName() + ".json");
     }
 
     /**
@@ -39,8 +36,8 @@ abstract class AbstractSerializationTest<T> {
      */
     @Test
     public void serializeToJSON() throws IOException {
-        assertThat(MAPPER.writeValueAsString(object))
-                .isEqualTo(MAPPER.writeValueAsString(MAPPER.readValue(fixture, objectClass)));
+        assertThat(MAPPER.writeValueAsString(testEntity))
+                .isEqualTo(MAPPER.writeValueAsString(MAPPER.readValue(fixture, testEntityClass)));
     }
 
     /**
@@ -48,7 +45,7 @@ abstract class AbstractSerializationTest<T> {
      */
     @Test
     public void deserializeFromJSON() throws IOException {
-        assertThat(MAPPER.readValue(fixture, objectClass))
-                .isEqualTo(object);
+        assertThat(MAPPER.readValue(fixture, testEntityClass))
+                .isEqualTo(testEntity);
     }
 }

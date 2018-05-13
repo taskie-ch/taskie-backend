@@ -8,7 +8,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * Flat representation.
+ * <p>
+ * Use {@link Flat#create(long, String)} to create a new flat.
  */
 public class Flat {
 
@@ -26,67 +28,128 @@ public class Flat {
         this.tasks = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Creates a new instance of {@link Flat}.
+     *
+     * @param id   flat id
+     * @param name flat name
+     * @return new flat instance
+     */
     public static Flat create(long id, String name) {
         return new Flat(id, name);
     }
 
+    /**
+     * @return flat id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @return flat name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return set of users
+     */
     public Set<Flatmate> getUsers() {
         return new HashSet<>(users.values());
     }
 
+    /**
+     * Adds a new user to the flat.
+     *
+     * @param user new user
+     */
     public void addFlatmate(Flatmate user) {
+        LOG.info("{{}}: Adding new flatmate {}", name, user.getName());
         this.users.put(user.getId(), user);
     }
 
+    /**
+     * Adds new users to the flat.
+     *
+     * @param users collection of new users.
+     */
     public void addAllFlatmates(Collection<Flatmate> users) {
-        LOG.info("Flat:{} - Adding new flatmates {}", id, users);
-        users.forEach(user -> this.users.put(user.getId(), user));
+        users.forEach(this::addFlatmate);
     }
 
+    /**
+     * Removes an existing user from the flat.
+     *
+     * @param id id of the user
+     */
     public void removeFlatmate(String id) {
         users.remove(id);
     }
 
+    /**
+     * Adds a new task to the flat.
+     *
+     * @param task new task
+     */
     public void addTask(Task task) {
         tasks.put(task.getId(), task);
     }
 
+    /**
+     * Removes an existing task from the flat.
+     *
+     * @param id id of the task
+     */
     public void removeTask(long id) {
         tasks.remove(id);
     }
 
+    /**
+     * Tries to look up a user by id and returns an optional.
+     *
+     * @param id id of the user
+     * @return optional of user
+     */
     public Optional<Flatmate> findUser(final String id) {
         return users.values().stream()
                 .filter(user -> user.getId().equals(id))
                 .reduce((first, next) -> first);
     }
 
+    /**
+     * Tries to look up a user by name and returns an optional.
+     *
+     * @param name name of the user
+     * @return optional of user
+     */
     public Optional<Flatmate> findUserByName(final String name) {
         return users.values().stream()
                 .filter(user -> user.getName().equals(name))
                 .reduce((first, next) -> first);
     }
 
+    /**
+     * @return collection of tasks
+     */
     public Collection<Task> getTasks() {
-        return tasks.values();
+        return Collections.unmodifiableCollection(tasks.values());
     }
 
+    /**
+     * Gets a task by id.
+     *
+     * @param id id of the task
+     * @return task
+     */
     public Task getTask(long id) {
         return tasks.get(id);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public final boolean equals(Object o) {
+        if (!(o instanceof Flat)) return false;
         Flat flat = (Flat) o;
         return id == flat.id &&
                 Objects.equals(name, flat.name) &&
@@ -95,7 +158,7 @@ public class Flat {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(id, name, users, tasks);
     }
 

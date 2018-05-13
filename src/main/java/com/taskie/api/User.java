@@ -11,7 +11,7 @@ import java.util.Objects;
  * JSON API definition of a user.
  */
 @Immutable
-public class User {
+public final class User {
 
     private final String id;
     private final String name;
@@ -43,8 +43,7 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof User)) return false;
         User user = (User) o;
         return score == user.score &&
                 Objects.equals(id, user.id) &&

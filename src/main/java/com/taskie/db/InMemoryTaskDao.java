@@ -1,5 +1,7 @@
 package com.taskie.db;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.taskie.api.FlatService;
 import com.taskie.api.TaskCreate;
 import com.taskie.api.TaskInfo;
@@ -13,15 +15,18 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
  * Data access object for {@link Task} storing data in memory.
+ * <p>
+ * Use {@link InMemoryTaskDao#create(FlatService)} to create a new DAO.
  */
 public class InMemoryTaskDao implements TaskService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Rotation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InMemoryTaskDao.class);
 
     /**
      * Unique task Id generator
@@ -30,19 +35,43 @@ public class InMemoryTaskDao implements TaskService {
 
     private final FlatService flatService;
 
-    public InMemoryTaskDao(@Nonnull FlatService flatService) {
+    private InMemoryTaskDao(@Nonnull FlatService flatService, Map<Long, List<TaskCreate>> tasks) {
         this.flatService = flatService;
-        save(1, new TaskCreate("Throw garbage", Frequency.WEEKLY.toString(),
-                DateTime.parse("2018-05-09T00:00").toString(), Effort.LOW.intValue(),
-                buildUserIds(Arrays.asList("Jane", "Tom", "Joe"))));
-        save(1, new TaskCreate("Buy groceries", Frequency.WEEKLY.toString(),
-                DateTime.parse("2018-05-16T00:00").toString(), Effort.LOW.intValue(),
-                buildUserIds(Arrays.asList("Tom", "Joe", "Jane"))));
-        save(1, new TaskCreate("Clean bathroom", Frequency.WEEKLY.toString(),
-                DateTime.parse("2018-05-19T00:00").toString(), Effort.HIGH.intValue(),
-                buildUserIds(Arrays.asList("Joe", "Tom", "Jane"))));
+        // save provided tasks
+        for (final Long flatId : tasks.keySet()) {
+            tasks.get(flatId).forEach(taskCreate -> save(flatId, taskCreate));
+        }
     }
 
+    /**
+     * Creates a new instance of {@link InMemoryTaskDao}
+     * and initialises it with tasks for the existing flat (for the prototype).
+     *
+     * @param flatService flat service
+     * @return initialised in-memory task DAO
+     */
+    public static InMemoryTaskDao create(FlatService flatService) {
+        return new InMemoryTaskDao(flatService,
+                // initialise example tasks for flatId:1
+                Maps.asMap(Sets.newHashSet(1L), id -> Arrays.asList(
+                        new TaskCreate("Throw garbage", Frequency.WEEKLY.toString(),
+                                DateTime.parse("2018-05-09T00:00").toString(), Effort.LOW.intValue(),
+                                buildUserIds(Arrays.asList("Jane", "Tom", "Joe"))),
+                        new TaskCreate("Buy groceries", Frequency.WEEKLY.toString(),
+                                DateTime.parse("2018-05-16T00:00").toString(), Effort.LOW.intValue(),
+                                buildUserIds(Arrays.asList("Tom", "Joe", "Jane"))),
+                        new TaskCreate("Clean bathroom", Frequency.WEEKLY.toString(),
+                                DateTime.parse("2018-05-19T00:00").toString(), Effort.HIGH.intValue(),
+                                buildUserIds(Arrays.asList("Joe", "Tom", "Jane")))
+                )));
+    }
+
+    /**
+     * Maps user names to ids using {@link InMemoryFlatDao#generateUserId(String)}.
+     *
+     * @param userNames list of user names
+     * @return list of user ids
+     */
     private static List<String> buildUserIds(List<String> userNames) {
         return userNames.stream().map(InMemoryFlatDao::generateUserId).collect(Collectors.toList());
     }
@@ -81,14 +110,19 @@ public class InMemoryTaskDao implements TaskService {
 
     private Task save(long flatId, long taskId, TaskCreate taskCreate) {
 
+        Flat flat = flatService.findById(flatId);
+
         List<Flatmate> flatmates = flatService.findUsers(flatId, taskCreate.getUserIds());
-        LOG.info("Set rotation for task [{}] as {}", taskCreate.getTitle(), flatmates);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("{{}|{}}: Set rotation to {}", flat.getName(), taskCreate.getTitle(),
+                    flatmates.stream().map(Flatmate::getName).collect(Collectors.toList()));
+        }
 
         Task task = Task.newBuilder(taskCreate)
                 .setId(taskId)
                 .setRotation(flatmates)
                 .build();
-        flatService.findById(flatId).addTask(task);
+        flat.addTask(task);
         return task;
     }
 

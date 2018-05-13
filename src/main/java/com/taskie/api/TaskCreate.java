@@ -12,7 +12,7 @@ import java.util.Objects;
  * JSON API definition of data required to create a task.
  */
 @Immutable
-public class TaskCreate {
+public final class TaskCreate {
 
     private final String title;
     private final String frequency;
@@ -60,8 +60,7 @@ public class TaskCreate {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof TaskCreate)) return false;
         TaskCreate that = (TaskCreate) o;
         return effort == that.effort &&
                 Objects.equals(title, that.title) &&

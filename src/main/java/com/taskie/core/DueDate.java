@@ -1,11 +1,13 @@
 package com.taskie.core;
 
+import com.google.common.base.MoreObjects;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 
 /**
  * Date when a task has to be completed.
@@ -39,5 +41,24 @@ class DueDate {
      */
     synchronized String asString() {
         return date.toString();
+    }
+
+    @Override
+    public synchronized final boolean equals(Object o) {
+        if (!(o instanceof DueDate)) return false;
+        DueDate dueDate = (DueDate) o;
+        return Objects.equals(date, dueDate.date);
+    }
+
+    @Override
+    public synchronized final int hashCode() {
+        return Objects.hash(date);
+    }
+
+    @Override
+    public synchronized String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("date", date)
+                .toString();
     }
 }

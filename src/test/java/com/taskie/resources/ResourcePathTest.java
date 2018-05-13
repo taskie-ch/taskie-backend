@@ -2,9 +2,21 @@ package com.taskie.resources;
 
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResourcePathTest {
+
+    /**
+     * Workaround for issues with test coverage reporting.
+     */
+    @Test
+    public void invoke() throws Exception {
+        Constructor<ResourcePath> constructor = ResourcePath.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        assertThat(constructor.newInstance()).isNotNull();
+    }
 
     @Test
     public void verifyResourcePaths() {

@@ -17,13 +17,35 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Taskie application main, wiring together the environment.
+ */
 public class TaskieApplication extends Application<TaskieConfiguration> {
 
-    public static void main(final String[] args) throws Exception {
-        new TaskieApplication().run(args);
+    private static final Logger LOG = LoggerFactory.getLogger(TaskieApplication.class);
+
+    /**
+     * Main entry point. Requires command line arguments
+     * e.g. {"server", "config.yml"} to start a server.
+     *
+     * @param args command line arguments
+     */
+    public static void main(final String[] args) {
+        try {
+            new TaskieApplication().run(args);
+        } catch (Exception exception) {
+            LOG.error("Exception running Taskie", exception);
+        }
     }
 
+    /**
+     * Registers configuration bundles for the application.
+     *
+     * @param bootstrap application bootstrap
+     */
     @Override
     public void initialize(final Bootstrap<TaskieConfiguration> bootstrap) {
         bootstrap.addBundle(new CorsBundle<>());
@@ -35,6 +57,12 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
         });
     }
 
+    /**
+     * Registers and initialises resources and health checks.
+     *
+     * @param config taskie configuration
+     * @param env    environment container
+     */
     @Override
     public void run(final TaskieConfiguration config,
                     final Environment env) {
@@ -43,8 +71,8 @@ public class TaskieApplication extends Application<TaskieConfiguration> {
 
         configureExceptionMappers(env);
 
-        FlatService flatService = new InMemoryFlatDao();
-        TaskService taskService = new InMemoryTaskDao(flatService);
+        FlatService flatService = InMemoryFlatDao.create();
+        TaskService taskService = InMemoryTaskDao.create(flatService);
 
         env.healthChecks().register("flatService", new FlatServiceHealthCheck(flatService));
         env.healthChecks().register("taskService", new TaskServiceHealthCheck(taskService));

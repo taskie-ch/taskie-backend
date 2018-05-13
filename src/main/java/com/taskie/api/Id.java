@@ -11,7 +11,7 @@ import java.util.Objects;
  * JSON API definition of an id.
  */
 @Immutable
-public class Id {
+public final class Id {
 
     private final long id;
 
@@ -27,8 +27,7 @@ public class Id {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Id)) return false;
         Id id1 = (Id) o;
         return id == id1.id;
     }

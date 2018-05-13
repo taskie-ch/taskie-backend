@@ -12,7 +12,7 @@ import java.util.Objects;
  * JSON API definition of a task.
  */
 @Immutable
-public class TaskInfo {
+public final class TaskInfo {
 
     private final long id;
     private final String title;
@@ -72,8 +72,7 @@ public class TaskInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof TaskInfo)) return false;
         TaskInfo taskInfo = (TaskInfo) o;
         return id == taskInfo.id &&
                 effort == taskInfo.effort &&

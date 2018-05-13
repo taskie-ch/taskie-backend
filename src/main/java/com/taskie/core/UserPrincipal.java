@@ -5,22 +5,36 @@ import com.google.common.base.MoreObjects;
 import java.security.Principal;
 import java.util.Objects;
 
-public class UserPrincipal implements Principal {
-
-    public static final UserPrincipal NONE = new UserPrincipal("x", "NONE");
+/**
+ * User principal required for authentication.
+ */
+public final class UserPrincipal implements Principal {
 
     private final String id;
     private final String name;
 
+    /**
+     * Creates an user principal.
+     * Both id and name have to be unique for a user.
+     *
+     * @param id   unique user id
+     * @param name unique user name
+     */
     public UserPrincipal(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * @return user id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
@@ -28,8 +42,7 @@ public class UserPrincipal implements Principal {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof UserPrincipal)) return false;
         UserPrincipal that = (UserPrincipal) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name);

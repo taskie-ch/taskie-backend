@@ -1,5 +1,7 @@
 package com.taskie.core;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
@@ -27,21 +29,26 @@ public class Email {
     /**
      * @return the email address
      */
-    @Override
-    public String toString() {
+    public String getEmailAddress() {
         return emailAddress;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public final boolean equals(Object o) {
+        if (!(o instanceof Email)) return false;
         Email email = (Email) o;
         return Objects.equals(emailAddress, email.emailAddress);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(emailAddress);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("emailAddress", emailAddress)
+                .toString();
     }
 }

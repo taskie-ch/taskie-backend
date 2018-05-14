@@ -26,6 +26,7 @@ public final class AuthConfiguration {
      * Enable authentication.
      *
      * @param env environment container
+     * @param flatService flat service providing user data
      */
     public static void configure(Environment env, FlatService flatService) {
 

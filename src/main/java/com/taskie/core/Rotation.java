@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Rotation sequence set for individual tasks
  */
-class Rotation {
+public class Rotation {
 
     private static final Logger LOG = LoggerFactory.getLogger(Rotation.class);
 
@@ -55,7 +55,7 @@ class Rotation {
      *
      * @return list of user ids
      */
-    List<String> getRotationUserIds() {
+    public List<String> getRotationUserIds() {
         return rotation.stream()
                 .map(Flatmate::getId)
                 .collect(Collectors.toList());
